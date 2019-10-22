@@ -1,1 +1,10 @@
-../../../.homesick/repos/dotfiles/home/.config/systemd/user/batmon.timer
+[Unit]
+Description=Run batmon every minute
+
+[Timer]
+OnBootSec=0min
+Persistent=true
+OnCalendar=*:0/1
+
+[Install]
+WantedBy=timers.target

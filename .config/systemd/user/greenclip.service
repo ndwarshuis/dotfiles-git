@@ -1,1 +1,10 @@
-../../../.homesick/repos/dotfiles/home/.config/systemd/user/greenclip.service
+[Unit]
+Description=Start greenclip daemon
+After=display-manager.service
+
+[Service]
+ExecStart=/usr/bin/greenclip daemon
+Restart=always
+
+[Install]
+WantedBy=default.target

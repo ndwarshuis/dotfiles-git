@@ -1,1 +1,10 @@
-../../../.homesick/repos/dotfiles/home/.config/systemd/user/mbsync.service
+[Unit]
+Description=Mailbox synchronization service
+After=network.target network-online.target dbus.socket
+
+[Service]
+Type=oneshot
+## note, need to use local script in order to make the alias for this work
+# ExecStart=/usr/bin/mbsync -Va 
+ExecStart=%h/.bin/mbsync-ndwar
+ExecStartPost=%h/.bin/mu-index-emacs-maybe

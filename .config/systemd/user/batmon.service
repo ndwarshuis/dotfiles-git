@@ -1,1 +1,9 @@
-../../../.homesick/repos/dotfiles/home/.config/systemd/user/batmon.service
+[Unit]
+Description=Batmon service
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/batmon
+
+[Install]
+WantedBy=multi-user.target

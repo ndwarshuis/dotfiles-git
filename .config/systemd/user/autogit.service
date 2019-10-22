@@ -1,1 +1,9 @@
-../../../.homesick/repos/dotfiles/home/.config/systemd/user/autogit.service
+[Unit]
+Description=Sync git repos
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/autogit "$REPOS"
+
+[Install]
+WantedBy=multi-user.target
