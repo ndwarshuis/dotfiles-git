@@ -1,1 +1,245 @@
-../../.homesick/repos/dotfiles/home/.config/isync/mbsyncrc
+##
+## overall design
+##
+
+## Each of these configurations assume that I don't use the
+## web interfaces (usually) for any of my servers and that I only
+## use mu4e as my email client (because I am smarter than my
+## smartphone).
+
+## Further assumptions include that that the only "folders" (or labels)
+## that I care about are inbox, archive, trash, and drafts (maybe).
+## Anything beyond this turns email into something it is not (a
+## terrible todo list). Spam/junk are useless to sync to a client
+## machine (unless something important "goes to junk" which in my
+## experience is extremely rare).
+
+## To elaborate on the folders I do care about:
+## - Inbox is the main interaction point with the email server/client.
+## Mail comes in and I make the decision to reply (keep thread open in
+## inbox), archive (important enough to keep, but not enough to stay
+## in sight), or delete (just plain useless). (Note there is instant
+## delete or move to trash depending on how sure I am of the message's
+## uselessness). Note that ideally the inbox is empty...as in no
+## files (regardless of read/unread). This keeps it fast and
+## uncluttered.
+## - Archive (or whatever this is called in the server) is for old
+## messages that may be useful for reference). This is where many
+## messages end up and accounts for most of the size/bulk of the files.
+## This is also why small inbox is important, because searching through
+## all these files is sloowwww.
+## - Sent is useless (just search for To:notme in archive) so don't
+## bother syncing at all.
+## - Trash is useful but only locally. I found it was a pain to get
+## trash to sync correctly with everything else mu4e does, so I don't
+## actually sync this folder. Instead, server trash is for spam/auto-
+## deleted crap found by my filters. Client trash works like actual
+## trash on the web interface. If I lose my laptop...oh well, it's
+## just trash :)
+## - Drafts works just like trash in that it only is useful locally
+## and not synced with the server. Ideally it is empty (why keep empty
+## drafts??).
+
+##
+## gmail server
+##
+
+## To the best of my knowledge, gmail uses one giant folder and
+## a bunch of "labels" to group emails. This is frustrating because
+## it does not map to on-disk filesystem paths very nicely by default.
+## Specifically, "All Mail" refers to everything minus trash/spam,
+## and an "Inbox" label (folder?) is applied on top of this to denote
+## the inbox messages. This leads to duplicates in many vanilla IMAP
+## syncing solutions. (No idea why gmail was designed this way).
+
+## To get around this, I created a new label called "rxv" (archive,
+## because apparently this name is "system reserved" in gmail) to
+## denote the "non-inbox" messages. This works but assumes that these
+## labels are mutually exclusive (which has no enforcement in gmail)
+## so all handling is done by mu4e to ensure that these are updated
+## properly (eg msgs from inbox moved to archive folder). I also
+## set auto-expunge = off and set deleted/expunged messages to be
+## moved to trash (it could also be set to "delete forever" but trash
+## is safer).
+
+## NOTE: this does not seem to work all that well when one move from
+## archive back to inbox (eg it actually double-labels the message)
+## Since I hardly ever do this...whatever
+
+IMAPAccount gmail
+Host imap.gmail.com
+User natedwarshuis@gmail.com
+PassCmd "secret-tool lookup host imap.gmail.com user natedwarshuis@gmail.com"
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+# CertificateFile ~/.local/etc/certs/imap.gmail.com.pem
+# PipelineDepth 1
+
+IMAPStore gmail-remote
+Account gmail
+
+MaildirStore gmail-local
+Subfolders Verbatim
+Path /mnt/data/Mail/gmail/
+Inbox /mnt/data/Mail/gmail/inbox
+
+Channel gmail-inbox
+Master :gmail-remote:"INBOX"
+Slave :gmail-local:"inbox"
+Create Both
+Expunge Master
+SyncState *
+
+Channel gmail-all
+Master :gmail-remote:"rxv"
+Slave :gmail-local:"archive"
+Create Both
+Expunge Slave
+SyncState *
+
+Group gmail
+Channel gmail-inbox
+Channel gmail-all
+
+##
+## gatech office365 server
+##
+
+## this is very similar to the gmail setup except that the sent
+## folder must by synced as outlook does not group sent mail
+## automagically in the inbox as gmail does (as a consequence of the
+## "all mail" folder behavior?)
+
+IMAPAccount gatech
+Host outlook.office365.com
+User ndwarshuis3@gatech.edu
+PassCmd "secret-tool lookup host outlook.office365.com user ndwarshuis3@gatech.edu"
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+PipelineDepth 1
+
+IMAPStore gatech-remote
+Account gatech
+
+MailDirStore gatech-local
+Path /mnt/data/Mail/gatech/
+Inbox /mnt/data/Mail/gatech/inbox
+
+Channel gatech-inbox
+Master :gatech-remote:"Inbox"
+Slave :gatech-local:"inbox"
+Create Both
+Expunge Both
+SyncState *
+
+Channel gatech-sent
+Master :gatech-remote:"Sent Items"
+Slave :gatech-local:"sent"
+Create Both
+Expunge Both
+SyncState *
+
+Channel gatech-archive
+Master :gatech-remote:"Archive"
+Slave :gatech-local:"archive"
+Create Both
+Expunge Both
+SyncState *
+
+Group gatech
+Channel gatech-inbox
+Channel gatech-sent
+Channel gatech-archive
+
+##
+## emory office365 server
+##
+
+## identical to gatech server except different credentials
+
+IMAPAccount emory
+Host outlook.office365.com
+User ndwarsh@emory.edu
+PassCmd "secret-tool lookup host outlook.office365.com user ndwarsh@emory.edu"
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+PipelineDepth 1
+
+IMAPStore emory-remote
+Account emory
+
+MailDirStore emory-local
+Path /mnt/data/Mail/emory/
+Inbox /mnt/data/Mail/emory/inbox
+
+Channel emory-inbox
+Master :emory-remote:"Inbox"
+Slave :emory-local:"inbox"
+Create Both
+Expunge Both
+SyncState *
+
+Channel emory-sent
+Master :emory-remote:"Sent Items"
+Slave :emory-local:"sent"
+Create Both
+Expunge Both
+SyncState *
+
+Channel emory-archive
+Master :emory-remote:"Archive"
+Slave :emory-local:"archive"
+Create Both
+Expunge Both
+SyncState *
+
+Group emory
+Channel emory-inbox
+Channel emory-sent
+Channel emory-archive
+
+##
+## test email server
+##
+
+## to eventually be my primary email server
+IMAPAccount yavin4
+Host portnoy4prez.yavin4.ch
+User ndwar@yavin4.ch
+PassCmd "secret-tool lookup host peart4prez.yavin4.ch user ndwar@yavin4.ch"
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+PipelineDepth 1
+
+IMAPStore yavin4-remote
+Account yavin4
+
+MailDirStore yavin4-local
+Path /mnt/data/Mail/yavin4/
+Inbox /mnt/data/Mail/yavin4/inbox
+
+Channel yavin4-inbox
+Master :yavin4-remote:"INBOX"
+Slave :yavin4-local:"inbox"
+Create Both
+Expunge Both
+SyncState *
+
+Channel yavin4-sent
+Master :yavin4-remote:"Sent"
+Slave :yavin4-local:"sent"
+Create Both
+Expunge Both
+SyncState *
+
+Channel yavin4-archive
+Master :yavin4-remote:"Archive"
+Slave :yavin4-local:"archive"
+Create Both
+Expunge Both
+SyncState *
+
+Group yavin4
+Channel yavin4-inbox
+Channel yavin4-sent
+Channel yavin4-archive

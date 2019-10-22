@@ -1,1 +1,11 @@
-../../.homesick/repos/dotfiles/home/.config/r/.Renviron
+R_HOME_USER = ${HOME}/R
+R_PROFILE_USER = ${XDG_CONFIG_HOME}/r/Rprofile.r
+R_MAKEVARS_USER = ${XDG_CONFIG_HOME}/r/Makevars
+R_LIBS_USER = ${HOME}/R/x86_64-pc-linux-gnu-library/
+# this shouldn't be needed beacuse ESS overrides it
+R_HISTFILE = ${XDG_DATA_HOME}/r/session.Rhistory
+#R_DEFAULT_PACKAGES =
+#MYSQL_HOME = /var/lib/mysql                  
+
+# packrat-specific
+R_PACKRAT_CACHE_DIR = ${XDG_CACHE_HOME}/packrat
