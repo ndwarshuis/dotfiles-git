@@ -59,7 +59,7 @@ LESSHISTFILE            DEFAULT=-
 
 ### mu
 #
-MU_HOME                 DEFAULT=${XDG_DATA_HOME}/mu
+MU_HOME                 DEFAULT=${XDG_CACHE_HOME}/mu
 
 ### nodejs
 #
