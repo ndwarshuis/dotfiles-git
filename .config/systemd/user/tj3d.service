@@ -1,0 +1,13 @@
+[Unit]
+Description=Start Taskjuggler 3 Daemon
+After=display-manager.service
+
+[Service]
+Environment=CONF="%h/.config/tj3/taskjugglerrc"
+Type=forking
+ExecStart=/usr/bin/tj3d -c "$CONF" --silent
+RemainAfterExit=yes
+ExecStop=/usr/bin/tj3client -c "$CONF" terminate
+
+[Install]
+WantedBy=default.target

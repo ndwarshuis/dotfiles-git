@@ -1,0 +1,15 @@
+MAKEFLAGS=-j4
+
+## C options
+CFLAGS=-O3 -Wall -pedantic -march=native -mtune=native -pipe
+CXXFLAGS=-O3 -Wall -pedantic -march=native -mtune=native -pipe
+
+## ccache options
+VER=
+CCACHE=ccache
+CC=$(CCACHE) gcc$(VER)
+CXX=$(CCACHE) g++$(VER)
+CXX11=$(CCACHE) g++$(VER)
+CXX14=$(CCACHE) g++$(VER)
+FC=$(CCACHE) gfortran$(VER)
+F77=$(CCACHE) gfortran$(VER)

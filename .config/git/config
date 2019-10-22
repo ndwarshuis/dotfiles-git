@@ -1,0 +1,17 @@
+[user]
+	name = ndwarshuis
+	email = ndwar@yavin4.ch
+[core]
+	editor = vi 
+[merge]
+	tool = meld
+[diff "exif"]
+	textconv = exiftool
+[diff "word"]
+	textconv = catdoc
+[diff "odt"]
+    textconv = odt2txt
+[color]
+	ui = true
+[credential]
+	helper = /usr/lib/git-core/git-credential-libsecret

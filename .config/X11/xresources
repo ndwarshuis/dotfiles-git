@@ -1,0 +1,121 @@
+! when in doubt, look here: /usr/share/X11/app-defaults/
+! or look at man pages for resources
+
+!!!
+! FONTS
+!!!
+Xft.autohint: 0
+Xft.lcdfilter: lcddefault
+Xft.hintstyle: hintfull
+Xft.hinting: 1
+Xft.antialias: 1
+Xft.rgba: rgb
+Xft.dpi: 96
+
+!!!
+! COLORS
+!!!
+
+! Black + DarkGrey
+*color0:        #000000
+*color8:        #666666
+
+! DarkRed + Red
+*color1:        #dd2020
+*color9:        #ff4040
+
+! DarkGreen + Green
+*color2:        #20cc20
+*color10:       #30ff30
+
+! DarkYellow + Yellow
+*color3:        #cccc20
+*color11:       #ffff30
+
+! DarkBlue + Blue
+*color4:        #0070ff
+*color12:       #00a0ff
+
+! DarkMagenta + Magenta
+*color5:        #cc20cc
+*color13:       #ff60ff
+
+! DarkCyan + Cyan
+*color6:        #20cccc
+*color14:       #30ffff
+
+! LightGrey + White
+*color7:        #aaaaaa
+*color15:       #ffffff
+
+! no blinkencursors
+*.cursorBlink:  False
+*.cursorColor:  #30ff30 
+
+*.colorUL:		11
+
+!!!
+! URXVT
+!!!
+
+! look and feel
+URxvt.depth: 		    	32
+URxvt.background: 	    	[85]#000000
+URxvt.foreground: 	    	15
+URxvt.font: 		    	xft:DejaVu Sans Mono:size=11:autohint=false
+URxvt.boldfont:		    	xft:DejaVu Sans Mono Bold:size=11:autohint=false
+URxvt.fontItalic:	    	xft:DejaVu Sans Mono Oblique:size=11:autohint=false
+URxvt.fontBoldItalic:   	xft:DejaVu Sans Mono Bold Oblique:size=11:autohint=false
+URxvt.tabbed.tabbar-fg: 	15
+URxvt.tabbed.tabbar-bg: 	0
+URxvt.tabbed.tab-fg:    	0
+URxvt.tabbed.tab-bg:    	15
+URxvt.tabbed.autohide:		true
+URxvt.tabbed.title:			false
+
+! enable locale
+URxvt.imLocale:         	en_US.UTF-8
+
+! disable iso crap
+URxvt.iso14755:         	False
+URxvt.iso14755_52:			False
+
+! save lots of history
+URxvt.saveLines:        	8192
+
+! fade when not in focus
+URxvt.fading:		    	50
+URxvt.fadeColor:			Grey25
+
+! restore alt key behavior
+URxvt.meta8:            	False
+
+! scrollbars are lame
+URxvt.scrollBar:        	False
+
+! launch some nice extensions
+URxvt.perl-ext-common:  	default,matcher,tabbedex,keyboard-select,selection-to-clipboard
+
+! matcher config (URL stuff)
+URxvt.url-launcher:     	/bin/firefox
+URxvt.matcher.button:   	1
+
+! keyboard-select config (select text and search)
+URxvt.keysym.M-Escape:	 		 perl:keyboard-select:activate
+URxvt.keyboard-select.clipboard: True;
+! URxvt.keysym.Control-A:        perl:keyboard-select:activate
+! URxvt.keysym.Control-S:        perl:keyboard-select:search
+
+! copy and paste hotkeys
+URxvt.keysym.Control-C:        perl:clipboard:copy
+URxvt.keysym.Control-V:        perl:clipboard:paste
+URxvt.keysym.Control-B:        perl:clipboard:paste_escaped
+
+! remap default tabbedex hotkeys to match other apps (eg firefox)
+URxvt.keysym.Control-t: 			perl:tabbedex:new_tab
+URxvt.keysym.Control-Tab: 			perl:tabbedex:next_tab
+URxvt.keysym.Control-ISO_Left_Tab: 	perl:tabbedex:prev_tab
+URxvt.keysym.Control-Shift-Left: 	perl:tabbedex:move_tab_left
+URxvt.keysym.Control-Shift-Right: 	perl:tabbedex:move_tab_right
+URxvt.keysym.Control-Shift-R: 		perl:tabbedex:rename_tab
+URxvt.tabbed.no-tabbedex-keys: 		true

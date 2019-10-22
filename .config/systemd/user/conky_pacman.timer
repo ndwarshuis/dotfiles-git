@@ -1,0 +1,9 @@
+[Unit]
+Description=Conky Pacman Stats Update Timer
+
+[Timer]
+OnBootSec=0s
+OnUnitActiveSec=1m
+
+[Install]
+WantedBy=timers.target

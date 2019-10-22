@@ -1,0 +1,54 @@
+#!/bin/sh
+
+# note: there is a constant flame war as to who should start
+# services, xinit or systemd. As of now (Oct 2019) there is no
+# way to make an xorg unit without running it as root (oops) so
+# therefore there is no way for any services that require
+# DISPLAY or XAUTHORITY to start "after" xorg is started. These
+# must be started here...or inside the exec whatever session using
+# its autostart service feature (if available)
+
+# ...additionally, it seems that PATH is not set for systemd --user
+# units either, but it is set here...so start anything requiring PATH
+# after this file as well
+
+userresources="$XDG_CONFIG_HOME/X11/xresources"
+
+if [ -f "$userresources" ]; then
+    xrdb -merge "$userresources"
+fi
+
+start_xkb() {
+	setxkbmap hypermode
+	xcape-layer &
+}
+
+start_services() {
+	greenclip daemon &
+	pgrep redshift &> /dev/null || redshift &> /dev/null &
+	dunst &
+	# urxvtd -q -f -o
+}
+
+start_panel() {
+	xmobar &
+	stalonetray
+}
+
+start_ui() {
+	# conky -d
+	compton --config .config/compton.conf -b
+	feh --no-fehbg --bg-fill ~/.local/share/backgrounds/wallpaper.png &
+	xsetroot -cursor_name left_ptr
+}
+
+start_xmonad() {
+	start_xkb
+	start_services
+	start_ui
+	exec xmonad
+}
+
+# start_xmonad
+exec cinnamon-session
+

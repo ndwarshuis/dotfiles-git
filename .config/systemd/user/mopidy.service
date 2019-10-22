@@ -1,0 +1,10 @@
+[Unit]
+Description=Mopidy Daemon
+After=network.target network-online.target dbus.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/mopidy -q
+
+[Install]
+WantedBy=default.target

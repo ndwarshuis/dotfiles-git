@@ -1,0 +1,15 @@
+[Unit]
+Description=Emacs daemon path
+
+[Service]
+Environment="XAUTHORITY=/run/user/1000/Xauthority"
+Environment="DISPLAY=:0"
+Type=simple
+ExecStart=/usr/bin/echo $PATH $ZDOTDIR $CUDA_CACHE_PATH
+#ExecStart=/usr/bin/emacs --daemon
+#ExecStop=/usr/bin/emacsclient --eval "(kill-emacs)"
+#Restart=always
+
+[Install]
+WantedBy=default.target
+

@@ -1,0 +1,10 @@
+[Unit]
+Description=Start Taskjuggler 3 Web Server
+After=display-manager.service
+
+[Service]
+ExecStart=/usr/bin/tj3webd -c %h/.config/tj3/taskjugglerrc --dont-daemonize
+Restart=always
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,9 @@
+[Unit]
+Description=Run auto every hour
+
+[Timer]
+Persistent=true
+OnCalendar=hourly
+
+[Install]
+WantedBy=timers.target
