@@ -9,20 +9,9 @@ XDG_CACHE_HOME          DEFAULT=@{HOME}/.cache
 XDG_DATA_HOME           DEFAULT=@{HOME}/.local/share
 XDG_RUNTIME_DIR         DEFAULT=/run/user/1000
 
-### base (revision controlled)
-#
-# _XDG_CONFIG_HOME        DEFAULT=@{HOME}/.dotfiles/etc
-# _XDG_CACHE_HOME         DEFAULT=@{HOME}/.dotfiles/var/cache
-# _XDG_DATA_HOME          DEFAULT=@{HOME}/.dotfiles/usr/share
-
 ### android
 #
 # ANDROID_AVD_HOME        DEFAULT=@{HOME}/.android/avd
-
-### auth
-#
-ICEAUTHORITY            DEFAULT=${XDG_RUNTIME_DIR}/ICEauthority
-XAUTHORITY              DEFAULT=${XDG_RUNTIME_DIR}/Xauthority
 
 ### aspell
 #
@@ -123,8 +112,10 @@ TEXMFHOME               DEFAULT=${XDG_CONFIG_HOME}/texmf
 #
 RXVT_SOCKET             DEFAULT=${XDG_RUNTIME_DIR}/urxvt/urxvtd-node
 
-### xinit
+### X11
 #
+ICEAUTHORITY            DEFAULT=${XDG_RUNTIME_DIR}/ICEauthority
+XAUTHORITY              DEFAULT=${XDG_RUNTIME_DIR}/Xauthority
 XINITRC                 DEFAULT=${XDG_CONFIG_HOME}/X11/xinitrc
 
 ### (z)sh
@@ -150,7 +141,6 @@ ZDOTDIR                 DEFAULT=${XDG_CONFIG_HOME}/zsh
 # ~/.local/bin
 
 PATH OVERRIDE=${RBENV_ROOT}/shims:${PYENV_ROOT}/shims:@{HOME}/.bin:@{HOME}/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/bin
-#PATH DEFAULT=${RBENV_ROOT}/shims:${PYENV_ROOT}/shims:@{HOME}/.bin:@{HOME}/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/bin
 
 #--------------------#
 # Applications
