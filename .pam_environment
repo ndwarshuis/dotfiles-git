@@ -28,6 +28,10 @@ XAUTHORITY              DEFAULT=${XDG_RUNTIME_DIR}/Xauthority
 #
 # ASPELL_CONF           DEFAULT=${XDG_CONFIG_HOME}/aspell.conf
 
+### AWS
+#
+AWS_CONFIG_FILE         DEFAULT=${XDG_CONFIG_HOME}/aws
+
 ### cabal
 #
 # CABAL_CONFIG            DEFAULT=${XDG_CONFIG_HOME}/cabal/config
