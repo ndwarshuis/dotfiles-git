@@ -21,7 +21,9 @@
 !/.ssh/config
 
 # don't need cache-like things
-/.cache
+/.cache/*
+# need to manually add pg history
+!/.cache/pg/
 /.thumbnails
 /.synapseCache
 
@@ -42,6 +44,7 @@
 !/.config/isync
 !/.config/mopidy
 !/.config/networkmanager-dmenu
+!/.config/pg
 !/.config/python
 !/.config/r/
 /.config/r/session.Rhistory

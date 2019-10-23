@@ -82,6 +82,13 @@ INPUTRC                 DEFAULT=${XDG_CONFIG_HOME}/readline/inputrc
 #
 PKGDEST                 DEFAULT=/var/cache/pacman/pkg
 
+### POSTGRESQL
+#
+PSQLRC                  DEFAULT=${XDG_CONFIG_HOME}/pg/psqlrc
+PSQL_HISTORY            DEFAULT=${XDG_CACHE_HOME}/pg/psql_history
+PGPASSFILE              DEFAULT=${XDG_CONFIG_HOME}/pg/pgpass
+PGSERVICEFILE           DEFAULT=${XDG_CONFIG_HOME}/pg/pg_service.conf
+
 ### python
 #
 PYTHONSTARTUP           DEFAULT=${XDG_CONFIG_HOME}/python/startup.py
