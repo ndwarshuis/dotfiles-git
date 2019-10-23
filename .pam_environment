@@ -34,6 +34,10 @@ CCACHE_DIR              DEFAULT=${XDG_CACHE_HOME}/ccache
 #
 GNUPGHOME               DEFAULT=${XDG_CONFIG_HOME}/gnupg
 
+### Grip
+#
+GRIPHOME                DEFAULT=${XDG_CONFIG_HOME}/grip
+
 ### gtk1/2
 #
 GTK2_RC_FILES           DEFAULT=${XDG_CONFIG_HOME}/gtk-2.0/gtkrc
