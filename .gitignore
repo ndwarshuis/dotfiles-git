@@ -26,6 +26,7 @@
 !/.cache/pg/
 /.thumbnails
 /.synapseCache
+/.mozilla
 
 # ignore all but a few config folders/files
 /.config/*
