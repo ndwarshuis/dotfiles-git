@@ -1,0 +1,58 @@
+# ignore XDG user directories
+/Desktop
+/Documents
+/Downloads
+/Music
+/Pictures
+/Public
+/Templates
+/Videos
+/VirtualBox VMs
+
+# ignore special user directories
+/BibTeX
+/Dcache
+/Dvl
+/Org
+/R
+
+# ignore all in ssh except config
+/.ssh/*
+!/.ssh/config
+
+# don't need cache-like things
+/.cache
+/.thumbnails
+/.synapseCache
+
+# ignore all but a few config folders/files
+/.config/*
+!/.config/aws
+!/.config/ccache.config
+!/.config/compton.conf
+!/.config/conky
+!/.config/dunst
+!/.config/fontconfig
+!/.config/git
+!/.config/gtk-2.0
+!/.config/gtk-3.0
+!/.config/greenclip
+!/.config/grip
+/.config/grip/cache*
+!/.config/isync
+!/.config/mopidy
+!/.config/networkmanager-dmenu
+!/.config/python
+!/.config/r/
+/.config/r/session.Rhistory
+!/.config/redshift
+!/.config/rofi
+!/.config/systemd
+# TODO add texmf here
+!/.config/X11
+!/.config/zsh
+/.config/zsh/.zcompdump*
+
+# ignore most local dirs
+/.local/*
+!/.local/share/conky
