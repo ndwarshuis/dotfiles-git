@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# get the lifetime cpu utilization percent of pid (the one argument)
+
+pidfile="/proc/$1/stat"
+ticks=$(getconf CLK_TCK)
+uptime=$(awk '{print $1}' "/proc/uptime")
+utime=$(awk '{print $14}' "$pidfile")
+stime=$(awk '{print $15}' "$pidfile")
+cutime=$(awk '{print $16}' "$pidfile")
+cstime=$(awk '{print $17}' "$pidfile")
+starttime=$(awk '{print $22}' "$pidfile")
+
+echo "($utime + $stime + $cutime + $cstime) / ($uptime * $ticks - $starttime)" | bc -l
+

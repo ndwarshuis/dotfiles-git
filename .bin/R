@@ -1,0 +1,112 @@
+#! /bin/bash
+
+# Run R interpreter, optionally launching inside a docker container
+# Launch in docker iff a file called '.rundocker' exists and contains
+# the name of a valid image in the current directory
+
+# function follow_link_maybe () {
+#     ## resolve symlinks if arg is a valid symlink, else return arg
+#     # NOTE we assume that no keyword args come through here (like
+#     # "-e" or "--args"
+#     if realpath -e "$1" > /dev/null 2>&1; then
+#         realpath -e "$1"
+#     else
+#         echo "$1"
+#     fi
+# }
+
+# function join_quote () {
+#     ## join arguments with space and single quote them
+#     local first=true
+#     for i in "$@"; do
+#         if [ "$first" == false ]; then
+#             printf " "
+#         fi
+#         if [[ "$i" == -* ]];then
+#             printf "%s" "$i"
+#         else
+#             printf "'%s'" $(follow_link_maybe "$i")
+#         fi
+#         first=false
+#     done
+# }
+
+## TODO the env args here are not DRY
+system_r=(env "MAKEFLAGS=-j8" /bin/R --quiet "$@")
+
+# launch in docker if we find a .rundocker file
+if [ -f ".rundocker" ]; then
+    image=$(cat .rundocker)
+
+    if ! docker info > /dev/null 2>&1; then
+        echo "Docker daemon not running"
+        echo "Using Systemwide R Installation"
+        "${system_r[@]}"
+    fi
+    
+    if ! docker image inspect "$image" > /dev/null 2>&1; then
+        echo "Invalid image: $image"
+        echo "Using Systemwide R Installation"
+        "${system_r[@]}"
+    fi
+
+    # TODO what about host user's environ file and such?
+
+    # TODO not all images have a docker user
+    # start container using the docker user
+    user=docker
+
+    ## TODO the working directory needs to be mirrored on the docker
+    ## container for Emacs flycheck to work
+    # start container in docker's home directory
+    work_dir=/home/docker
+    # work_dir=$PWD
+
+    # mount the current host directory to docker's user home
+    pwd_mnt="type=bind,source=$(pwd),target=/home/docker"
+    # pwd_mnt="type=bind,source=$work_dir,target=$work_dir"
+
+    # add X11 socket/env so we can see pretty plots
+    # from here https://github.com/rocker-org/rocker-versioned/tree/master/X11
+    xsock=/tmp/.X11-unix
+    xauth=/tmp/.docker.xauth
+    touch "$xauth"
+    xauth nlist "$DISPLAY" | sed -e 's/^..../ffff/' | \
+        xauth -f "$xauth" nmerge -
+    x11=(-v "$xsock:$xsock"
+         -v "$xauth:$xauth"
+         -e "XAUTHORITY=${xauth}"
+         -e "DISPLAY=$DISPLAY")
+
+    opts=(-ti --rm -w "$work_dir" --mount "$pwd_mnt" --user "$user"
+          "${x11[@]}")
+
+    # TODO not all images have the same path for R
+    # TODO add env vars somehow
+    cmd=(/usr/local/bin/R --quiet "$@")
+
+    # if we are in Emacs, do some special tricks to satisfy ESS
+    if [[ -n "$INSIDE_EMACS" ]]; then
+        # TODO do we need to pass any environmental variables?
+
+        # ESS sends some 'source' commands to the running R process
+        # after it starts; these are in the emacs user directory
+        emacs_home="$HOME/.emacs.d"
+        emacs_mnt="type=bind,source=$emacs_home,target=$emacs_home"
+        opts+=(--mount "$emacs_mnt")
+
+        # ESS gets confused if lines are terminated with \r\n (which
+        # unfortunately is the default in docker). Set the terminal
+        # to not echo inputs before starting R
+        # cmd=(/usr/local/bin/R --quiet $(join_quote "$@"))
+        docker run "${opts[@]}" "$image" /bin/sh -c "stty -echo -onlcr && ${cmd[*]}"
+    else
+        # docker run "${opts[@]}" "$image" /bin/bash -c "stty -onlcr && echo && ${cmd[*]}"
+        docker run "${opts[@]}" "$image" "${cmd[@]}"
+    fi
+
+    ## remove X11 auth file
+    rm -f "$xauth"
+else
+    "${system_r[@]}"
+fi

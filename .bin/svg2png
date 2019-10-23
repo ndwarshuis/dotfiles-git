@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# Convert all arguments (assumed SVG) to a PNG
+# Requires Inkscape
+
+for i in $@; do
+  BN=$(basename $i .svg)
+  inkscape --without-gui --export-area-drawing --export-png="$BN.png" --export-dpi 300 $i
+done

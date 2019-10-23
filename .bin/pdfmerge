@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# merge pdf files with ghostscript
+
+help()
+{
+cat << EOF
+help: $0 options
+
+Merge PDF files together
+
+OPTIONS:
+   -h      	You know what this is obviously
+   -i		input files (comma separated)
+   -o       output file
+
+EOF
+}
+
+while getopts “hi:o:” OPTION
+do
+	case $OPTION in
+		h)
+			help
+			exit 1
+			;;
+        i)
+            input="$OPTARG"
+            ;;
+		o)
+			echo "$OPTARG"
+			output="$OPTARG"
+			;;
+		*)
+			break
+			;;
+	esac
+done
+
+if [ -z "$input" ]; then
+	echo "invalid input"
+	exit 1
+fi
+
+if [ -z "$output" ]; then
+	echo "invalid output"
+	exit 1
+fi
+
+input=${input//","/" "}
+
+gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -dPDFSETTINGS=/prepress -sOutputFile="$output" $input

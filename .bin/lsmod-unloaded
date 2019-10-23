@@ -1,0 +1,13 @@
+#! /bin/bash
+
+# list all kernal modules that are not currently loaded
+
+all_mods="$(find /lib/modules/$(uname -r) -type f -name \*.ko -execdir basename {} .ko ';')"
+all_mods=${all_mods//-/_}
+loaded_mods=$(lsmod | grep -Eo '^[^ ]+')
+
+while read -r line; do
+	if ! [[ "$loaded_mods" =~ "$line" ]]; then
+		echo "$line"
+	fi
+done <<< "$all_mods"

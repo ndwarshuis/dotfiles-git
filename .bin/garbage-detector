@@ -1,0 +1,53 @@
+#! /bin/bash
+
+# detect crap that needs to be cleaned up
+
+###
+# Detect unused keys in dconf
+###
+
+# this only makes sense to do if we have dconf
+if [ -e /usr/bin/dconf ]; then
+	echo -e "###\n# Unused dconf paths\n###"
+	SCHEMA_DIR=/usr/share/glib-2.0/schemas/
+
+	# do a dconf dump but only keep the paths and transform to form path.to.whatever.gschema.xml
+	dump=$(dconf dump / | sed '/^\[/!d; s/\[//g; s/\]//g')
+
+	while read -r line; do
+		schemaid=$(echo "$line" | sed 's/\//\./g')
+		# first test if the path matches a schema
+		if [ ! -e "$SCHEMA_DIR$schemaid.gschema.xml" ]; then
+			# if not, test if it is in another schema as a path
+			grep -Fqr "$line" "$SCHEMA_DIR"
+			if [ $? -eq 1 ]; then
+				# if it does not have its own schema and is not in another schema, print it
+				echo "$line"
+			fi
+		fi
+	done <<< "$dump"
+fi
+
+###
+# Pacnew and Pacsave configs
+###
+
+pacnew=$(sudo find /etc -name "*.pacnew")
+pacsave=$(sudo find /etc -name "*.pacsave")
+
+echo -e "###\n# Pacnew files\n###\n$pacnew"
+echo -e "###\n# Pacsave files\n###\n$pacsave"
+
+###
+# Detect seafile conflicts
+###
+
+## add seafile directories to this array
+SEAFDIRS=(/mnt/data/Documents)
+
+echo -e "###\n# Seafile conflicts\n###"
+
+for i in "${SEAFDIRS[@]}"; do
+	find "$i" -name "*SFConflict*"
+done
+

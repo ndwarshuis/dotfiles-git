@@ -1,0 +1,22 @@
+#! /bin/bash
+
+# small script to log battery usage in txt file for conky to parse
+# lovingly stolen from battery-stats by petter reinholdtsen
+
+DST_FILE="$XDG_CACHE_HOME/batmon.log"
+SYS_BAT_PATH="/sys/class/power_supply/BAT0"
+BAT_CAP_PATH="$SYS_BAT_PATH/charge_now"
+BAT_CAP_FULL_PATH="$SYS_BAT_PATH/charge_full"
+MAX_ENTRIES=1440 # number of minutes in day
+
+read_bat_percent() {
+	timestamp=$(date +%s)
+	charge_now=$(cat "$BAT_CAP_PATH")
+	charge_full=$(cat "$BAT_CAP_FULL_PATH")
+	percent=$(echo "100 * $charge_now / $charge_full" | bc)
+	echo $timestamp $percent >> "$DST_FILE"
+}
+
+read_bat_percent
+# truncate to most recent entries by max_entries
+tail -n $MAX_ENTRIES "$DST_FILE" > /tmp/batmon.tmp.log && mv /tmp/batmon.tmp.log "$DST_FILE"  

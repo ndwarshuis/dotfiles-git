@@ -1,0 +1,5 @@
+#! /bin/bash
+
+# run isync using my configuartion in XDG_CONFIG_HOME
+
+mbsync -Va -c "$XDG_CONFIG_HOME/isync/mbsyncrc"

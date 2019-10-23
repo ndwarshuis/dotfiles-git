@@ -1,0 +1,22 @@
+#! /bin/bash
+
+## capture a screenshot using scrot
+
+SS_DIR="$XDG_CACHE_HOME/screenshots"
+
+while getopts ":sw" opt; do
+	case ${opt} in
+		s)
+			scrot "$SS_DIR/desktop/%Y-%m-%d-%H:%M:%S_desktop.png"
+			notify-send "Screen captured"
+			;;
+		w)
+			scrot -u "$SS_DIR/window/%Y-%m-%d-%H:%M:%S-\$wx\$h.png"
+			notify-send "Window captured"
+			;;
+		\?)
+			echo "invalid option, read the code"
+			;;
+	esac
+done
+

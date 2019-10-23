@@ -1,0 +1,96 @@
+#! /bin/bash
+
+
+function split()
+{
+	if [ -n "$4" ]; then
+		if [[ $4 == *","* ]]; then
+			inner_counter=1
+			for i in ${4//,/ }
+			do
+				pdftk "$1" cat "$i" output "$2"/$(printf "%02d" $counter)_"$3$inner_counter.pdf"
+				((inner_counter+=1))
+				((counter+=1))
+			done
+		else
+			pdftk "$1" cat "$4" output "$2"/$(printf "%02d" $counter)_"$3.pdf"
+			((counter+=1))
+		fi
+		echo "$3 $4" >> "$2/.log"
+	fi
+}
+
+help()
+{
+cat << EOF
+help: $0 options
+
+Split text book pdfs into sections.
+All options except file take lists that are comma seaparated.
+Examples: 1-2,3-4 (range) or 1,2-4,5 (single and range) or 1 (single)
+
+Requires pdftk
+
+OPTIONS:
+   -h      	You know what this is obviously
+   -f		source file (a pdf)
+   -t		table of contents
+   -c		chapters
+   -a		appendices
+   -i       indices
+   -g       glossary
+
+EOF
+}
+
+while getopts “hf:t:c:a:i:g:o:” OPTION
+do
+	case $OPTION in
+		h)
+			help
+			exit 1
+			;;
+		f)
+			src=$OPTARG
+			;;
+		t)
+			toc=$OPTARG
+			;;
+        c)
+            chapters=$OPTARG
+            ;;
+		a)
+			appendices=$OPTARG
+			;;
+		i)
+			indices=$OPTARG
+			;;
+		g)
+			glossary=$OPTARG
+			;;
+		*)
+			break
+			;;
+	esac
+done
+
+if [ ! -e "$src" ]; then
+	echo "\"$src\" does not exist"
+	exit 1
+fi
+
+folder=$(basename "$src")
+folder=${src%\.pdf}
+
+mkdir "$folder"
+
+counter=0
+
+split "$src" "$folder" "table_of_contents" "$toc"
+split "$src" "$folder" "chapter" "$chapters"
+split "$src" "$folder" "appendix" "$appendices"
+split "$src" "$folder" "index" "$indices"
+split "$src" "$folder" "glossary" "$glossary"
+
+# copy original
+cp "$src" "$folder/.original"

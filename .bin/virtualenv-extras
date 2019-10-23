@@ -1,0 +1,7 @@
+#! /bin/bash
+
+# make a new python environment and install some nice defaults
+
+virtualenv "$1"
+source "$1/bin/activate"
+pip install ipython black flake8 pylint

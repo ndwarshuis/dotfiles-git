@@ -1,0 +1,36 @@
+#! /bin/bash
+
+## lock the screen using i3lock
+
+IPATH=~/.local/share/backgrounds/lockscreen1.png
+
+i3lock -i "$IPATH" \
+	   --color=000000 \
+	   --nofork \
+	   --ignore-empty-password \
+	   --screen=0 \
+	   --indicator \
+	   --insidecolor=00000055 \
+	   --insidevercolor=00000055 \
+	   --insidewrongcolor=00000055 \
+	   --ringcolor=555555ff \
+	   --ringwrongcolor=ff3333ff \
+	   --ringvercolor=99ceffff \
+	   --keyhlcolor=99ceffff \
+	   --bshlcolor=9523ffff \
+	   --linecolor=00000000 \
+	   --separatorcolor=00000000 \
+	   --clock \
+	   --verifcolor=99ceffff \
+	   --wrongcolor=ff8282ff \
+	   --timecolor=ffffffff \
+	   --timesize=72 \
+	   --timestr="%H:%M" \
+	   --datecolor=ffffffff \
+	   --datesize=42 \
+	   --datestr="%b %m, %Y" \
+	   --datepos="960:600" \
+	   --wrongsize=72 \
+	   --verifsize=72 \
+	   --radius=300 \
+	   --ring-width=25

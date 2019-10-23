@@ -1,0 +1,206 @@
+#!/bin/bash
+
+#a featherweight youtube piracy tool :)
+
+help()
+{
+cat << EOF
+help: $0 options
+
+Use this to pirate the audio from youtube vidz.
+
+Uses ffmpeg and youtube-dl
+
+OPTIONS:
+   -h      	You know what this is obviously
+   -q		Quality; 1-5 scale, defaults to 2 (~220 kbits/s)
+   -x      	Extension (default is m4a)
+   -f		Save Folder (defaults to current working directory)
+   Metadata:
+   -a		Artist name
+   -t      	Album title
+   -g      	Genre
+   -y		Year
+   -n		No track numbers
+   -i		Interactive (confirm each extraction)
+
+Note: if any metadata option is not specified,
+each option will be prompted every url
+EOF
+}
+
+quality=		#b
+extension=		#x
+artist=			#a
+album_title=		#t
+genre=			#g
+year=			#y
+track=			#n
+
+while getopts “hq:x:a:t:g:y:ni” OPTION
+do
+	case $OPTION in
+		h)
+			help
+			exit 1
+			;;
+		q)
+			quality=$OPTARG
+			;;
+		x)
+			extension=$OPTARG
+			;;
+		f)
+			folder=$OPTARG
+			;;
+		a)
+			artist=$OPTARG
+			;;
+		t)
+			album_title=$OPTARG
+			;;
+		g)
+			genre=$OPTARG
+			;;
+		y)
+			year=$OPTARG
+			;;
+		n)
+			track=1
+			;;
+		i)
+			interactive=1
+			;;
+		*)
+			break
+			;;
+	esac
+done
+
+#set defaults
+if [[ -z $quality ]]; 	then quality="2";	    fi
+if [[ -z $extension ]]; then extension="m4a"; 	fi
+if [[ -z $folder ]]; 	then folder=$(pwd); 	fi
+if [[ -z $track ]]; 	then track=0; 			fi
+
+#set metadata if user gave them
+if [[ -n $artist ]]; 		then a=$artist; 		fi
+if [[ -n $album_title ]]; 	then t=$album_title; 	fi
+if [[ -n $genre ]]; 		then g=$genre; 			fi
+if [[ -n $year ]]; 			then y=$year; 			fi
+
+OPTIONS="URL Done"
+select opt in $OPTIONS
+do
+	case $opt in
+		URL)
+			#get necessary stuff first
+			read -p "Enter URL to vid: " u
+
+			if [[ $u =~ v=(.*) ]]; then
+				vid_id=${u##*v=}
+				vid_id=${vid_id%%&*}
+
+				read -p "Enter Song Title: " s
+
+				#get other info depending on how it was given initially
+				if [[ -z $artist ]]; 		then read -p "Artist? " a; 		fi
+				if [[ -z $album_title ]]; 	then read -p "Album Title? " t; fi
+				if [[ -z $genre ]]; 		then read -p "Genre? " g; 		fi
+				if [[ -z $year ]]; 			then read -p "Year? " y; 		fi
+
+				if [[ $track = 0 ]]; then
+					read -p "Track Number? " n
+					if [[ "${#n}" = 1 ]]; then n="0$n"; fi
+					n0="$n-"
+				else
+					n=""
+				fi
+
+				filename="$n0$s ($a-$t).$extension"
+
+				if [[ $interactive = 1 ]]; then
+					echo GENERAL
+					echo quality: "$quality"
+					echo Save into: "$folder"
+					echo Video ID: "$vid_id"
+					echo
+					echo METADATA
+					echo New Filename: $filename
+					echo Artist: $a
+					echo Album Title: $t
+					echo Genre: $g
+					echo Year: $y
+					echo Track: $n
+					echo
+					echo Continue?
+					CONFIRM="Yes No"
+					select con in $CONFIRM
+					do
+						case $con in
+						Yes)
+							Continue=1
+							break
+							;;
+						No)
+							Continue=0
+							echo Starting Over
+							break
+							;;
+						*)
+							echo $con
+							echo Try Again
+							;;
+						esac
+					done
+				else
+					Continue=1
+				fi
+
+				if [[ $Continue = 1 ]]; then
+					youtube-dl $u --id
+
+					if [[ "$track" = 0 ]]; then
+						arg=(-q "$quality" -metadata TITLE=$s -metadata ARTIST=$a -metadata ALBUM=$t -metadata GENRE=$g -metadata DATE=$y -metadata track=$n)
+					else
+						arg=(-q "$quality" -metadata TITLE=$s -metadata ARTIST=$a -metadata ALBUM=$t -metadata GENRE=$g -metadata DATE=$y)
+					fi
+
+					ffmpeg -i "$vid_id".* "${arg[@]}" -vn -strict experimental "$filename"
+
+					rm "$vid_id".*
+				fi
+			else
+				echo "Invalid URL, no ID detected. Try again"
+			fi
+			;;
+		Done)
+			echo Exiting
+			exit 0
+			;;
+		*)
+			echo $opt
+			echo Try Again
+			;;
+	esac
+done
+
+#~ if [[ $address =~ $regex ]]; then
+	#~ video_id=${BASH_REMATCH[1]}
+	#~ video_id=$(echo $video_id | cut -d'&' -f1)
+	#~ video_title="$(youtube-dl --get-title $address)"
+	#~ youtube-dl $address
+	#~ ext="flv"
+	#~ ffmpeg -i $video_id.$ext "$video_title".wav
+		#~
+	#~ rm $video_id.$ext "$video_title".wav
+#~ else
+	#~ echo "Sorry but the system encountered a problem."
+#~ fi
+
+#additional stuff
+#ffmpeg -i song.flac -ab 320k -strict experimental  song.mp4
+#q = quality (argument?)
+
+#ffmpeg -i video.mp4 -ab 320k -vn -metadata TITLE="" -metadata ARTIST="" -metadata GENRE="" -metadata ALBUM="" -strict experimental song.mp4
+#use mp4 to allow metadata w/ aac compression :)

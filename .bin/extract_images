@@ -1,0 +1,16 @@
+#! /bin/env python3
+
+# extract all images (now jpegs) from an xml
+# blob (like those created for sms dumps)
+
+import bs4
+import base64
+
+with open("sms-20190702215407.xml", "r") as f:
+    soup = bs4.BeautifulSoup(f.read(), "lxml")
+
+for i in soup.findAll("part", ct="image/jpeg"):
+    date = i.parent.parent["date"]
+    pic = base64.b64decode(i["data"])
+    with open("out/" + date, "wb") as w:
+        w.write(pic)

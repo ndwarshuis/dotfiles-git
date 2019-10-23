@@ -1,0 +1,5 @@
+#! /bin/bash
+
+# stop the emacs daemon
+
+emacsclient --eval "(kill-emacs)"

@@ -1,0 +1,31 @@
+#! /bin/bash
+
+#~ SLEEPTIME=5
+
+#~ estimate_core_wattage() {
+	#~ echo "Estimating wattage for $1"
+	#~ for i in `seq 1 5`; do
+		#~ local uJ_1=$(cat /sys/class/powercap/intel-rapl:0:0/energy_uj)
+		#~ sleep $SLEEPTIME
+		#~ local uJ_2=$(cat /sys/class/powercap/intel-rapl:0:0/energy_uj)
+		#~ local watts=$((uJ_2-uJ_1))
+		#~ watts=$((watts/SLEEPTIME))
+		#~ echo "Wattage consumed: $watts uW"
+	#~ done
+#~ }
+
+change_gov() {
+	sudo cpupower frequency-set -g "$1"
+}
+
+run_pts() {
+	change_gov "$1"
+	#~ estimate_core_wattage "$1"
+	phoronix-test-suite batch-benchmark pts/compress-7zip pts/build-php pts/c-ray pts/john-the-ripper
+}
+
+run_pts performance
+run_pts powersave
+run_pts schedutil
+run_pts conservative
+

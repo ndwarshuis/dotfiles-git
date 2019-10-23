@@ -1,0 +1,114 @@
+#! /bin/bash
+
+#ASSUMPTIONS
+#-fs on card is FAT32
+
+#recursive file navigator to loop through everything
+function sync()
+{
+	for i in "$1"/*; do
+		#new file name without special chars to adhere to FAT32 limitations
+		fat_path=${i//"?"/""}
+		fat_path=${fat_path//"*"/""}
+		fat_path=${fat_path//"<"/""}
+		fat_path=${fat_path//">"/""}
+		fat_path=${fat_path//"|"/""}
+		fat_path=${fat_path//":"/""}
+
+        fat_name="${fat_path##*/}"
+
+		#if directory then call self and loop
+		if [ -d "$i" ]; then
+
+            if [ ! -d "$fat_name" ]; then
+                #mkdir "${fat_path##*/}"
+                mkdir "$fat_name"
+            fi
+
+			#cd "${fat_path##*/}"
+            cd "$fat_name"
+			sync "$i"
+			cd ../
+		#if file then check
+		else
+
+            if [ -f "$fat_name" ] || \
+               [ -f "${fat_name//.flac/.mp4}" ] || \
+               [ -f "${fat_name//.flac/.aac}" ] || \
+               [ -f "${fat_name//.flac/.m4a}" ]; then
+                echo skipping "$fat_name"
+            else
+        		echo $fat_path
+			    #if these then copy (remove cover art)
+			    if [ "${i: -4}" == ".mp3" -o \
+				     "${i: -4}" == ".mp4" -o \
+                     "${i: -4}" == ".m4a" -o \
+				     "${i: -4}" == ".aac" -o \
+                     "${i: -5}" == ".opus" ]; then
+
+				    #~ cp "$i" "$fat_name"
+				    ffmpeg -i "$i" -vn -codec:a copy "$fat_name"
+			    #if flac then convert to m4a (if flag is not raised)
+			    elif [ "${i: -5}" == ".flac" ]; then
+				    if [ "$conv" == 1 ]; then
+					    trimmed_name=${fat_path##*/}
+                        ffmpeg -i "$i" -aq $quality -vn -strict -2 "${trimmed_name%%.flac}".m4a
+				    else
+					    #~ cp "$i" "$fat_name"
+					    ffmpeg -i "$i" -vn -codec:a copy "$fat_name"
+				    fi
+			    fi
+            fi
+		fi
+	done
+}
+
+help()
+{
+cat << EOF
+help: $0 options
+
+Sync memory device with music folder on ssd
+Files will be saved/synced to current directory
+If flac files are found they will be converted to m4a to conserve space
+
+Uses ffmpeg
+
+OPTIONS:
+   -h      	You know what this is obviously
+   -c		Do not convert flac to mp4
+   -q       Quality (defaults to 2; 200-250 kbps)
+   -f		Source Folder (defaults to ~/Music)
+
+Note: if bit is given it will be used instead of quality
+
+EOF
+}
+
+conv=1
+quality=2 #highest quality
+folder="$HOME/Music"
+
+while getopts “hcf:q:” OPTION
+do
+	case $OPTION in
+		h)
+			help
+			exit 1
+			;;
+		c)
+			conv=0
+			;;
+        q)
+            quality=$OPTARG
+            ;;
+		f)
+			folder=$OPTARG
+			;;
+		*)
+			break
+			;;
+	esac
+done
+
+sync "$folder"

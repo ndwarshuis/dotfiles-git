@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# exports the current keyboard layout as a pdf
+# the sole argument is the path of the output file
+
+# requires:
+# - xorg-setxkbmap
+# - xorg-setxkbcomp
+# - xorg-xkbprint
+# - ghostscript
+
+if [ -z "$1" ]; then
+    echo no output file path given
+    exit 1
+fi
+
+setxkbmap -print |
+    xkbcomp - - |
+    xkbprint -label symbols -color - - |
+    ps2pdf - > "$1"

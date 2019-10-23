@@ -1,0 +1,12 @@
+#! /usr/bin/env bash
+
+## indexes mu depending on whether emacs mu4e is running
+
+## assume the mu server is only started by mu4e
+if pgrep -fx '/usr/bin/mu server' > /dev/null; then
+	echo indexing mu through emacs
+    emacsclient -e '(mu4e-update-index)' > /dev/null
+else
+	echo indexing mu natively
+    mu index --maildir /mnt/data/Mail
+fi

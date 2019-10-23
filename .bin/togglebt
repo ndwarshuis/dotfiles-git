@@ -1,0 +1,14 @@
+#! /bin/bash
+
+## toggle the bluetooth power state and notify
+
+## lazy awk usage :)
+btstate="$(bluetoothctl show | grep "Powered: " | awk '{print $2}')"
+
+btaction="off"
+if [[ $btstate == "no" ]]; then
+	btaction="on"
+fi
+
+bluetoothctl power "$btaction" > /dev/null
+notify-send "bluetooth powered $btaction"

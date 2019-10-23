@@ -1,0 +1,27 @@
+#! /bin/bash
+
+# estimate the power usage of the cpu using different
+# frequency scaling governors
+
+SLEEPTIME=1
+
+estimate_core_wattage() {
+	sudo cpupower frequency-set -g "$1"
+	sleep 5
+	echo "Estimating wattage for $1"
+	for i in `seq 1 60`; do
+		local pkg0_1=$(cat /sys/class/powercap/intel-rapl:0/energy_uj)
+		local core_1=$(cat /sys/class/powercap/intel-rapl:0:0/energy_uj)
+		local igpu_1=$(cat /sys/class/powercap/intel-rapl:0:1/energy_uj)
+		sleep $SLEEPTIME
+		local pkg0_2=$(cat /sys/class/powercap/intel-rapl:0/energy_uj)
+		local core_2=$(cat /sys/class/powercap/intel-rapl:0:0/energy_uj)
+		local igpu_2=$(cat /sys/class/powercap/intel-rapl:0:1/energy_uj)
+		echo $(((pkg0_2-pkg0_1)/SLEEPTIME)) $(((core_2-core_1)/SLEEPTIME)) $(((igpu_2-igpu_1)/SLEEPTIME))
+	done
+}
+
+estimate_core_wattage performance
+estimate_core_wattage powersave
+estimate_core_wattage schedutil
+estimate_core_wattage conservative

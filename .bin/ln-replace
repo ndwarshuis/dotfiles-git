@@ -1,0 +1,15 @@
+#! /bin/bash
+
+# ln-replace find-string replace-string
+
+# looks for "find-string"  in links and replaces with "replace string"
+
+for i in *
+do
+	ln_path_old="$(readlink $i)"
+	if [ "$ln_path_old" != "" ]; then
+		ln_path_new=${ln_path_old/$1/$2}
+		rm "$i"
+		ln -s "$ln_path_new" "$i"
+	fi
+done

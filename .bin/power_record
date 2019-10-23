@@ -1,0 +1,15 @@
+#! /bin/bash
+
+# simple script to output the current current (lol) and current
+# voltage of the battery every second. Record this to a file, multiply,
+# and find power...absolute...POOOOOOWEEEER!!!!!!
+
+for i in $(seq "$1"); do
+    ## in uC
+    I=$(cat /sys/class/power_supply/BAT0/current_now)
+    ## in uV
+    V=$(cat /sys/class/power_supply/BAT0/voltage_now)
+    ## in pW
+    echo $(( I * V ))
+    sleep 1.0
+done
