@@ -49,6 +49,9 @@
 !/.config/python
 !/.config/r/
 /.config/r/session.Rhistory
+!/.config/recoll
+/.config/recoll/*
+!/.config/recoll/recoll.conf
 !/.config/redshift
 !/.config/rofi
 !/.config/systemd

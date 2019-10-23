@@ -105,6 +105,10 @@ PYENV_ROOT              DEFAULT=${XDG_DATA_HOME}/pyenv
 #
 R_ENVIRON_USER          DEFAULT=${XDG_CONFIG_HOME}/r/.Renviron
 
+### Recoll
+#
+RECOLL_CONFDIR          DEFAULT=${XDG_CONFIG_HOME}/recoll
+
 ### ruby
 #
 RBENV_ROOT              DEFAULT=${XDG_DATA_HOME}/rbenv
