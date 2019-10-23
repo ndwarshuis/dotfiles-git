@@ -1,0 +1,5 @@
+#! /bin/sh
+
+# xdg-base-dir override of mbsync
+
+/bin/mbsync -c "$XDG_CONFIG_HOME/isync/mbsyncrc" "$@"

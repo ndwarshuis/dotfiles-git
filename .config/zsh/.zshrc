@@ -149,18 +149,11 @@ alias grep='grep --color=auto'
 exists colordiff && alias diff=colordiff
 alias sudo='sudo '
 alias hs='history 1 | grep'
-# exists R && alias R='MAKEFLAGS="-j8" R --quiet'
 exists mfsconsole && alias msfconsole="msfconsole --quiet -x \"db_connect ${USER}@msf\""
-
-# taskjuggler
-exists tj3d && alias tj3d="tj3d -c $XDG_CONFIG_HOME/tj3/taskjugglerrc"
-exists tj3webd && alias tj3webd="tj3webd -c $XDG_CONFIG_HOME/tj3/taskjugglerrc"
-exists tj3client && alias tj3client="tj3client -c $XDG_CONFIG_HOME/tj3/taskjugglerrc"
 
 # xdg conformity
 exists arm && alias arm='arm -c "$XDG_CONFIG_HOME"/arm/armrc'
 exists gpg2 && alias gpg2='gpg2 -c "$XDG_CONFIG_HOME"/gnupg'
-exists mbsync && alias mbsync='mbsync -c "$XDG_CONFIG_HOME"/isync/mbsyncrc'
 exists nvidia-settings && alias nvidia-settings='nvidia-settings -c "$XDG_CONFIG_HOME"/nvidia/settings'
 exists svn && alias svn='svn --config-dir "$XDG_CONFIG_HOME"/subversion'
 
@@ -185,7 +178,6 @@ alias uu='cd ../..'
 alias uuu='cd ../../..'
 alias uuuu='cd ../../../..'
 alias uuuuu='cd ../../../../..'
-alias gh='cd ~'
 
 # power on/off
 alias reboot='sudo /sbin/reboot'

@@ -1,0 +1,5 @@
+#! /bin/sh
+
+# xdg-base-dir override of tj3client
+
+/bin/tj3client -c "$XDG_CONFIG_HOME/tj3/taskjugglerrc" "$@"
