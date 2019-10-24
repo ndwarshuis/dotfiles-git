@@ -65,6 +65,10 @@ _JAVA_OPTIONS           DEFAULT=-Djava.util.prefs.userRoot=${XDG_CONFIG_HOME}/ja
 LESSKEY                 DEFAULT=${XDG_CONFIG_HOME}/less/lesskey
 LESSHISTFILE            DEFAULT=-
 
+### MATLAB
+#
+MATLAB_PREFDIR          DEFAULT=${XDG_CONFIG_HOME}/matlab
+
 ### mu
 #
 MU_HOME                 DEFAULT=${XDG_CACHE_HOME}/mu
