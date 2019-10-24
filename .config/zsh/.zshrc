@@ -113,23 +113,70 @@ if [[ $SSH_FLAG -eq 1 ]]; then
 	hostname="@%M"
 fi	
 
-# precmd() {
-#   local left="%B┌($user_color%n$hostname%f)─(%F{green}%*%f)─$VIMODE"
-#   local right=""
-#   local left_width=${#${(S%%)left//(\%([KF1]|)\{*\}|\%[Bbkf])}}
-#   local right_width=${#${(S%%)right//(\%([KF1]|)\{*\}|\%[Bbkf])}}
-#   local padding=$((COLUMNS - left_width - right_width - 1))
-#   print -Pr $'\n'"$left${(l:$padding:)}$right"
-# }
-
 PROMPT=""
 RPROMPT=""
 
+git_info() {
+
+    # Exit if not inside a Git repository
+    ! git rev-parse --is-inside-work-tree > /dev/null 2>&1 && return
+
+    # Git branch/tag, or name-rev if on detached head
+    local GIT_LOCATION=$(git symbolic-ref -q HEAD || \
+                             git name-rev --name-only \
+                                 --no-undefined --always HEAD)
+    GIT_LOCATION=${GIT_LOCATION#(refs/heads/|tags/)}
+
+    local AHEAD="%F{red}⇡NUM%f"
+    local BEHIND="%F{cyan}⇣NUM%f"
+    local MERGING="%F{magenta⚡︎%f"
+    local UNTRACKED="%F{red}●%f"
+    local MODIFIED="%F{yellow}●%f"
+    local STAGED="%F{green}●%f"
+
+    local -a DIVERGENCES
+    local -a FLAGS
+
+    local NUM_AHEAD="$(git log --oneline @{u}.. 2> /dev/null | wc -l | tr -d ' ')"
+    if [ "$NUM_AHEAD" -gt 0 ]; then
+        DIVERGENCES+=( "${AHEAD//NUM/$NUM_AHEAD}" )
+    fi
+
+    local NUM_BEHIND="$(git log --oneline ..@{u} 2> /dev/null | wc -l | tr -d ' ')"
+    if [ "$NUM_BEHIND" -gt 0 ]; then
+        DIVERGENCES+=( "${BEHIND//NUM/$NUM_BEHIND}" )
+    fi
+
+    local GIT_DIR="$(git rev-parse --git-dir 2> /dev/null)"
+    if [ -n $GIT_DIR ] && test -r $GIT_DIR/MERGE_HEAD; then
+        FLAGS+=( "$MERGING" )
+    fi
+
+    if [[ -n $(git ls-files --other --exclude-standard 2> /dev/null) ]]; then
+        FLAGS+=( "$UNTRACKED" )
+    fi
+
+    if ! git diff --quiet 2> /dev/null; then
+        FLAGS+=( "$MODIFIED" )
+    fi
+
+    if ! git diff --cached --quiet 2> /dev/null; then
+        FLAGS+=( "$STAGED" )
+    fi
+
+    local -a GIT_INFO
+    [[ ${#DIVERGENCES[@]} -ne 0 ]] && GIT_INFO+=( "${(j::)DIVERGENCES}" )
+    [[ ${#FLAGS[@]} -ne 0 ]] && GIT_INFO+=( "${(j::)FLAGS}" )
+    GIT_INFO+=( "%F{green}$GIT_LOCATION%f" )
+    echo "─(%B${(j: :)GIT_INFO}%b)"
+}
+
 function zle-line-init zle-keymap-select {
+    GIT=$(git_info)
     NORMAL="%F{yellow}N%f"
-	INSERT="%F{cyan}I%f"
-    VIMODE="%B(${${KEYMAP/vicmd/$NORMAL}/(main|viins)/$INSERT})%b"
-	PROMPT=$'\n%B┌($user_color%n$hostname%f)─(%F{green}%*%f)─$VIMODE\n└─(%F{green}%1~%f)─>%b '
+    INSERT="%F{cyan}I%f"
+    VIMODE="─%B(${${KEYMAP/vicmd/$NORMAL}/(main|viins)/$INSERT})%b"
+    PROMPT=$'\n%B┌($user_color%n$hostname%f)─(%F{green}%*%f)$VIMODE$GIT\n└─(%F{green}%1~%f)─>%b '
     zle reset-prompt
 }
 
