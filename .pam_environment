@@ -68,6 +68,8 @@ LESSHISTFILE            DEFAULT=-
 ### MATLAB
 #
 MATLAB_PREFDIR          DEFAULT=${XDG_CONFIG_HOME}/matlab
+# this file must be manually created
+MATLAB_LOG_DIR          DEFAULT=${XDG_DATA_HOME}/matlab/log
 
 ### mu
 #
