@@ -274,6 +274,14 @@ alias scus="systemctl --user start"
 alias scut="systemctl --user stop"
 alias scur="systemctl --user restart"
 
+# suffix
+alias -s {htm,html,pdf}='firefox'
+alias -s {tiff,jpg,jpeg,png}='geeqie'
+alias -s {wav,mp4,mov,ogg,m4a,flac,mp3}='vlc'
+alias -s svg='inkscape'
+alias -s log='less'
+alias -s {csv,doc,docx,odp,ods,odt,ppt,pptx,xls,xlsx}='libreoffice'
+
 ## --------------------------------------------------
 ## Manly Colors
 ## --------------------------------------------------
