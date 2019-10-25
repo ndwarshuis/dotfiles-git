@@ -189,8 +189,6 @@ export KEYTIMEOUT=1
 ## Aliases 
 ## --------------------------------------------------
 
-setopt complete_aliases
-
 # various...
 alias grep='grep --color=auto'
 exists colordiff && alias diff=colordiff
@@ -263,6 +261,21 @@ alias gw="git whatchanged"
 alias gt="git tag"
 alias gnew="git log HEAD@{1}..HEAD@{0}"
 alias ggui="git gui"
+
+# systemd
+alias sc="sudo systemctl"
+alias sce="sudo systemctl enable"
+alias scd="sudo systemctl disable"
+alias scs="sudo systemctl start"
+alias sct="sudo systemctl stop"
+alias scr="sudo systemctl restart"
+
+alias scu="systemctl --user"
+alias scue="systemctl --user enable"
+alias scud="systemctl --user disable"
+alias scus="systemctl --user start"
+alias scut="systemctl --user stop"
+alias scur="systemctl --user restart"
 
 ## --------------------------------------------------
 ## Manly Colors
