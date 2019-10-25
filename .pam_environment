@@ -19,7 +19,8 @@ AQBANKING_HOME          DEFAULT=${XDG_CONFIG_HOME}/aqbanking
 
 ### aspell
 #
-# ASPELL_CONF           DEFAULT=${XDG_CONFIG_HOME}/aspell.conf
+# aspell directly must be manually created
+ASPELL_CONF             DEFAULT="per-conf ${XDG_CONFIG_HOME}/aspell/aspell.conf; personal ${XDG_CONFIG_HOME}/aspell/en.pws; repl ${XDG_CONFIG_HOME}/aspell/en.prepl"
 
 ### AWS
 #
