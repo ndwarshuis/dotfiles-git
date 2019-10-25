@@ -1,5 +1,3 @@
-zstyle :compinstall filename '/home/ndwar/.zshrc'
-
 autoload -Uz promptinit
 setopt appendhistory
 setopt extendedglob
@@ -31,8 +29,10 @@ for hlpath in zsh/plugins/zsh-syntax-highlighting zsh-syntax-highlighting; do
 done
 
 ## --------------------------------------------------
-# history search
+# history
 ## --------------------------------------------------
+
+setopt histignoredups
 
 autoload -Uz up-line-or-beginning-search
 autoload -Uz down-line-or-beginning-search
