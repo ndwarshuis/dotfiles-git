@@ -1,4 +1,4 @@
-#! /usr/bin/env bash
+#! /bin/sh
 
 ## indexes mu depending on whether emacs mu4e is running
 
