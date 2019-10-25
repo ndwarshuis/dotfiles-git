@@ -26,7 +26,6 @@
 !/.cache/pg/
 /.thumbnails
 /.synapseCache
-/.mozilla
 
 # ignore all but a few config folders/files
 /.config/*
@@ -63,3 +62,13 @@
 # ignore most local dirs
 /.local/*
 !/.local/share/conky
+
+# non-xdg things
+/.cinnamon
+/.ghc
+/.imagej
+/.java
+/.mozilla
+/.pki
+/.sane
+/.viminfo
