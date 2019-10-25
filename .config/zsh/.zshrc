@@ -1,14 +1,11 @@
-# The following lines were added by compinstall
 zstyle :compinstall filename '/home/ndwar/.zshrc'
 
 autoload -Uz promptinit
-##promptinit
-##prompt walters
 setopt appendhistory
 setopt extendedglob
+setopt correctall
 bindkey -v
 bindkey -v '^?' backward-delete-char
-# End of lines configured by zsh-newuser-install
 
 ## --------------------------------------------------
 # autocompletion
