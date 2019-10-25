@@ -32,7 +32,11 @@ done
 # history
 ## --------------------------------------------------
 
-setopt histignoredups
+setopt hist_expire_dups_first
+setopt hist_ignore_dups
+setopt hist_reduce_blanks
+setopt inc_append_history
+setopt share_history
 
 autoload -Uz up-line-or-beginning-search
 autoload -Uz down-line-or-beginning-search
