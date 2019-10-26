@@ -223,7 +223,7 @@ exists rsync && alias rsync=rsync_slashes
 alias ls='ls --color=auto'
 
 if exists exa; then
-    alias ll='exa -alh --group-directories-first'
+    alias ll='exa -alhg --group-directories-first'
     alias llt='exa -T'
     alias llg='ll --git'
 else
