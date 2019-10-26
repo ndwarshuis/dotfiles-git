@@ -1,3 +1,6 @@
 [submodule ".emacs.d"]
 	path = .emacs.d
-	url = ./.emacs.d
+	url = git@github.com:ndwarshuis/.emacs.d.git
+[submodule ".local/share/conky"]
+	path = .local/share/conky
+	url = git@github.com:ndwarshuis/conky-main.git
