@@ -61,16 +61,31 @@
 
 # ignore most local dirs
 /.local/*
+!/.local/share
+/.local/share/*
 !/.local/share/conky
 
-# non-xdg things
+### non-xdg things (all hardcoded by source)
+
+# cinnamon
 /.cinnamon
+/.gnome2
+/.face
+
+# Mendelay
+/.Mendelay\ Desktop
+/.QtWebEngineProcess
+
+# misc
+/.calc_history
 /.ghc
 /.hashcat
 /.imagej
 /.java
 /.mozilla
+/.org.jabref.JabRefMain
 /.pki
 /.sane
+# hardcoded in arch install
 /.tor-browser
 /.viminfo
