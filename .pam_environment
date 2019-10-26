@@ -35,6 +35,10 @@ AWS_CONFIG_FILE         DEFAULT=${XDG_CONFIG_HOME}/aws
 CCACHE_CONFIGPATH       DEFAULT=${XDG_CONFIG_HOME}/ccache.config
 CCACHE_DIR              DEFAULT=${XDG_CACHE_HOME}/ccache
 
+### Seafile
+#
+CCNET_CONF_DIR        DEFAULT=${XDG_CONFIG_HOME}/ccnet
+
 ### gnupg
 #
 GNUPGHOME               DEFAULT=${XDG_CONFIG_HOME}/gnupg
