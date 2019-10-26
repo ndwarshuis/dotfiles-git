@@ -73,7 +73,7 @@
 /.face
 
 # Mendelay
-/.Mendelay\ Desktop
+/.Mendeley\ Desktop
 /.QtWebEngineProcess
 
 # misc
@@ -82,6 +82,7 @@
 /.hashcat
 /.imagej
 /.java
+/.masterpdfeditor
 /.mozilla
 /.org.jabref.JabRefMain
 /.pki
