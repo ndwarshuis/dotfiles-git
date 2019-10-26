@@ -66,9 +66,11 @@
 # non-xdg things
 /.cinnamon
 /.ghc
+/.hashcat
 /.imagej
 /.java
 /.mozilla
 /.pki
 /.sane
+/.tor-browser
 /.viminfo
