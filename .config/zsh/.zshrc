@@ -206,6 +206,9 @@ export KEYTIMEOUT=1
 ## Aliases 
 ## --------------------------------------------------
 
+# searching aliases
+alias als='alias | grep'
+
 # various...
 alias grep='grep --color=auto'
 exists colordiff && alias diff=colordiff
