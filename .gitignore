@@ -7,14 +7,13 @@
 /Public
 /Templates
 /Videos
-/VirtualBox VMs
+/VirtualBox\ VMs
 
 # ignore special user directories
 /BibTeX
 /Dcache
 /Dvl
 /Org
-/R
 
 # ignore all in ssh except config
 /.ssh/*
