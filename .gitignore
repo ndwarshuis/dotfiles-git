@@ -63,6 +63,9 @@
 !/.local/share
 /.local/share/*
 !/.local/share/conky
+!/.local/share/stack/
+/.local/share/stack/*
+!/.local/share/stack/config.yaml
 
 ### non-xdg things (all hardcoded by source)
 

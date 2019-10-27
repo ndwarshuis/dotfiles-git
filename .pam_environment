@@ -53,8 +53,7 @@ GTK2_RC_FILES           DEFAULT=${XDG_CONFIG_HOME}/gtk-2.0/gtkrc
 
 ### haskell
 #
-# this is hacky and weird, it should go in .local but the global install is too big to be sane on my current partition scheme
-STACK_ROOT              DEFAULT=@{HOME}/Dvl/stack
+STACK_ROOT              DEFAULT=@{XDG_DATA_HOME}/stack
 
 ### ipython/jupyter
 #
