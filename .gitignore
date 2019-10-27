@@ -44,6 +44,9 @@
 !/.config/mopidy
 !/.config/networkmanager-dmenu
 !/.config/pg
+!/.config/psd/
+/.config/psd/*
+!/.config/psd/psd.conf
 !/.config/python
 !/.config/r/
 /.config/r/session.Rhistory
