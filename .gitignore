@@ -1,4 +1,3 @@
-# ignore XDG user directories
 /Desktop
 /Documents
 /Downloads
@@ -77,9 +76,9 @@
 /.gnome2
 /.face
 
-# Mendelay
-/.Mendeley\ Desktop
-/.QtWebEngineProcess
+# zotero
+/.zotero
+/Zotero
 
 # misc
 /.calc_history
@@ -89,7 +88,6 @@
 /.java
 /.masterpdfeditor
 /.mozilla
-/.org.jabref.JabRefMain
 /.pki
 /.sane
 # hardcoded in arch install
