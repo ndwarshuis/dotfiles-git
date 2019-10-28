@@ -10,5 +10,4 @@ templates:
   params:
    author-name: Nathan Dwarshuis
    author-email: ndwar@yavin4.ch
-#    copyright:
    github-username: ndwarshuis
