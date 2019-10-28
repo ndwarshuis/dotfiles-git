@@ -8,7 +8,7 @@
 # See https://docs.haskellstack.org/en/stable/yaml_configuration/#templates
 templates:
   params:
-    author-name: Nathan Dwarshuis
+   author-name: Nathan Dwarshuis
    author-email: ndwar@yavin4.ch
 #    copyright:
    github-username: ndwarshuis
