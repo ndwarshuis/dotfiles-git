@@ -93,3 +93,4 @@
 # hardcoded in arch install
 /.tor-browser
 /.viminfo
+/.zoom
