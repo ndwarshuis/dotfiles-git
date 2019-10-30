@@ -4,33 +4,6 @@
 # Launch in docker iff a file called '.rundocker' exists and contains
 # the name of a valid image in the current directory
 
-# function follow_link_maybe () {
-#     ## resolve symlinks if arg is a valid symlink, else return arg
-#     # NOTE we assume that no keyword args come through here (like
-#     # "-e" or "--args"
-#     if realpath -e "$1" > /dev/null 2>&1; then
-#         realpath -e "$1"
-#     else
-#         echo "$1"
-#     fi
-# }
-
-# function join_quote () {
-#     ## join arguments with space and single quote them
-#     local first=true
-#     for i in "$@"; do
-#         if [ "$first" == false ]; then
-#             printf " "
-#         fi
-#         if [[ "$i" == -* ]];then
-#             printf "%s" "$i"
-#         else
-#             printf "'%s'" $(follow_link_maybe "$i")
-#         fi
-#         first=false
-#     done
-# }
-
 ## TODO the env args here are not DRY
 system_r=(env "MAKEFLAGS=-j8" /bin/R --quiet "$@")
 
@@ -56,15 +29,11 @@ if [ -f ".rundocker" ]; then
     # start container using the docker user
     user=docker
 
-    ## TODO the working directory needs to be mirrored on the docker
-    ## container for Emacs flycheck to work
     # start container in docker's home directory
     work_dir=/home/docker
-    # work_dir=$PWD
 
     # mount the current host directory to docker's user home
     pwd_mnt="type=bind,source=$(pwd),target=/home/docker"
-    # pwd_mnt="type=bind,source=$work_dir,target=$work_dir"
 
     # add X11 socket/env so we can see pretty plots
     # from here https://github.com/rocker-org/rocker-versioned/tree/master/X11
@@ -98,10 +67,8 @@ if [ -f ".rundocker" ]; then
         # ESS gets confused if lines are terminated with \r\n (which
         # unfortunately is the default in docker). Set the terminal
         # to not echo inputs before starting R
-        # cmd=(/usr/local/bin/R --quiet $(join_quote "$@"))
         docker run "${opts[@]}" "$image" /bin/sh -c "stty -echo -onlcr && ${cmd[*]}"
     else
-        # docker run "${opts[@]}" "$image" /bin/bash -c "stty -onlcr && echo && ${cmd[*]}"
         docker run "${opts[@]}" "$image" "${cmd[@]}"
     fi
 
