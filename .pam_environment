@@ -161,9 +161,7 @@ ZDOTDIR                 DEFAULT=${XDG_CONFIG_HOME}/zsh
 # NOTE: PATH here is set before any startup files are read (including
 # /etc/profile). Therefore any programs that start before the shell
 # (eg systemd --user services) will only see whatever is specified
-# here. This is primarly an issue for the Emacs daemon, since this
-# requires all system binaries as well as any custom language paths
-# (eg pyenv and ruby)
+# here.
 
 # NOTE: all my personal scripts go in ~/.bin, everything else that is
 # "locally installed" (eg stuff from pip or stack install) goes in
