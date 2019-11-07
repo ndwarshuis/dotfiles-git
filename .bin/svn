@@ -1,0 +1,5 @@
+#! /bin/sh
+
+# xdg-base-dir override of svn
+
+svn --config-dir "$XDG_CONFIG_HOME"/subversion
