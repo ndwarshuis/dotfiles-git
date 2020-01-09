@@ -1,15 +1,21 @@
 #!/bin/sh
-# Add org file changes to the repository
-# thank you bernt hansen :D
+
+### Add org file changes to git repo
 
 for REPO in $1
 do
-    echo "Repository: $REPO"
+    echo "repository: $REPO"
     eval "cd $REPO"
-    # Remove deleted files
+    # check for errors
+    if ! git fsck --strict > /dev/null 2>&1; then
+        notify-send "Org git commit failed."
+    fi
+    # remove deleted files
     git ls-files --deleted -z | xargs -0 git rm >/dev/null 2>&1
-    # Add new files
+    # add new files
     git add . >/dev/null 2>&1
     git commit -m "$(date)"
+    # push
+    git push origin master
 done
 echo Done
