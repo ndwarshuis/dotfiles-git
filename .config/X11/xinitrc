@@ -49,6 +49,9 @@ start_xmonad() {
 	exec xmonad
 }
 
+# switch gpus as needed
+/usr/bin/prime-offload
+
 # start_xmonad
 exec cinnamon-session
 
