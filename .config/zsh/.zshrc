@@ -292,6 +292,7 @@ alias scd="sudo systemctl disable"
 alias scs="sudo systemctl start"
 alias sct="sudo systemctl stop"
 alias scr="sudo systemctl restart"
+alias sca="systemctl status"
 
 alias scu="systemctl --user"
 alias scue="systemctl --user enable"
@@ -299,6 +300,10 @@ alias scud="systemctl --user disable"
 alias scus="systemctl --user start"
 alias scut="systemctl --user stop"
 alias scur="systemctl --user restart"
+
+# optimus manager
+alias opti="optimus-manager --switch intel"
+alias optn="optimus-manager --switch nvidia"
 
 # suffix
 alias -s {htm,html,pdf}='firefox'
