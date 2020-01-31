@@ -203,7 +203,6 @@ exists mfsconsole && alias msfconsole="msfconsole --quiet -x \"db_connect ${USER
 # xdg conformity
 exists arm && alias arm='arm -c "$XDG_CONFIG_HOME"/arm/armrc'
 exists gpg2 && alias gpg2='gpg2 -c "$XDG_CONFIG_HOME"/gnupg'
-exists nvidia-settings && alias nvidia-settings='nvidia-settings -c "$XDG_CONFIG_HOME"/nvidia/settings'
 exists sqlite3 && alias sqlite3='SQLITE_HISTORY=$XDG_DATA_HOME/sqlite_history \
 sqlite3 -init "$XDG_CONFIG_HOME"/sqlite3/sqliterc'
 

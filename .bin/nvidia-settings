@@ -1,0 +1,5 @@
+#! /bin/sh
+
+# xdg-base-dir override of nvidia-settings
+
+/bin/nvidia-settings --config "$XDG_CONFIG_HOME/nvidia/settings" "$@"
