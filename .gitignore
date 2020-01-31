@@ -43,6 +43,7 @@
 !/.config/isync
 !/.config/mopidy
 !/.config/networkmanager-dmenu
+!/.config/nvidia
 !/.config/pg
 !/.config/psd/
 /.config/psd/*
