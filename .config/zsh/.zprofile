@@ -1,5 +1,5 @@
 # switch gpus as needed
-sudo /usr/bin/prime-switch
+sudo /usr/bin/prime-switch > /dev/null 2>&1
 
 # start X server
 [[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && \
