@@ -17,6 +17,7 @@ zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*:(ssh|scp|rsync|sshfs):*:hosts' ignored-patterns '*.yavin4.ch'
 
 autoload -Uz compinit && compinit -i
+autoload -Uz bashcompinit && bashcompinit
 
 ## --------------------------------------------------
 # syntax highlighting a la fish
