@@ -97,7 +97,7 @@ URxvt.scrollBar:        	False
 URxvt.perl-ext-common:  	default,matcher,tabbedex,keyboard-select,selection-to-clipboard
 
 ! matcher config (URL stuff)
-URxvt.url-launcher:     	/bin/firefox
+URxvt.url-launcher:     	/bin/brave
 URxvt.matcher.button:   	1
 
 ! keyboard-select config (select text and search)
