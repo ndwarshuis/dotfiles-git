@@ -1,0 +1,54 @@
+#! /bin/bash
+
+# rofi prompt to mount block devices with udisks
+
+devices="$(udiskie-info -a -o '{is_mounted} {is_filesystem} {device_file} {id_label}')"
+devarr=""
+mounted_devices=()
+
+has_filesystem () {
+    [[ "True" == "$(echo "$1" | awk '{ print $2; }')" ]]
+}
+
+is_mounted () {
+    [[ "True" == "$(echo "$1" | awk '{ print $1; }')" ]]
+}
+
+while read -r dev
+do
+    if has_filesystem "$dev"; then
+        path="$(echo "$dev" | awk '{ print $3 }')"
+        label="$(echo "$dev" | awk '{ print $4 }')"
+        if is_mounted "$dev"; then
+            mounted_devices+=("$path")
+            mounted="* "
+        else
+            mounted="  "
+        fi
+        devarr+="$mounted$path - $label\n"
+    fi
+done <<< "$devices"
+
+## TODO add an options file to mount network drives
+
+theme='#element.selected.normal { background-color: #999933; }'
+
+## TODO pass cmdline options to mimic the interface of nm-dmenu
+## (eg set -m -4 when calling instead of hardcoding)
+target_path=$(echo -e "$devarr" | \
+                  rofi -m -4 -dmenu -theme-str "$theme" -p "Devices" | \
+                  cut -c3- | \
+                  cut -d' ' -f1)
+
+if [ -n "$target_path" ]; then
+    ## this assumes that paths will never contain spaces
+    if [[ "${mounted_devices[*]}" =~ $target_path ]]; then
+        ## TODO replace this using the notify_command in the config file
+        out=$(udisksctl unmount -b "$target_path" 2>&1)
+        if [[ $? -ne 0 ]]; then
+            notify-send "$out"
+        fi
+    else
+        udisksctl mount -b "$target_path"
+    fi
+fi
