@@ -155,17 +155,6 @@ class GenericDevice(Action):
         return Popen(cmd, stdout=PIPE, stderr=STDOUT, text=True).communicate()[0]
 
 
-udiskie_out = (
-    Popen(UDISKIE_CMD, stdout=PIPE, stderr=STDOUT, text=True)
-    .communicate()[0]
-    .strip()
-    .split("\n")
-)
-
-with open(GENERAL_MNTS_PATH, "r") as f:
-    general_out = f.read().rstrip("\n").split("\n")[1:]
-
-
 def udiskie_init(line):
     is_mounted, is_fs, path, label = line[1:-1].split(" ")
     if is_fs == "True":
@@ -173,15 +162,42 @@ def udiskie_init(line):
         return UdiskieDevice(is_mounted, path, label)
 
 
-actions = (
-    [udiskie_init(line) for line in udiskie_out]
-    + [Blank()]
-    + [GenericDevice(*line.split("\t")) for line in general_out]
+def remove_none(xs):
+    return list(filter(lambda x: x is not None, xs))
+
+
+def format_actions(actions):
+    return "\n".join(list(map(lambda x: x.entry, actions)))
+
+
+udiskie_out = (
+    Popen(UDISKIE_CMD, stdout=PIPE, stderr=STDOUT, text=True)
+    .communicate()[0]
+    .strip()
+    .split("\n")
 )
 
-actions = list(filter(lambda x: x is not None, actions))
+udiskie_actions = (
+    remove_none([udiskie_init(line) for line in udiskie_out])
+    if len("".join(udiskie_out)) > 0
+    else []
+)
 
-rofi_opts = "\n".join(list(map(lambda x: x.entry, actions)))
+with open(GENERAL_MNTS_PATH, "r") as f:
+    # TODO this assumes the tsv file has headers as the first row
+    # this may or may not be true
+    # assume this will output a [] if the file is empty
+    general_out = f.read().rstrip("\n").split("\n")[1:]
+
+general_actions = remove_none(
+    [GenericDevice(*line.split("\t")) for line in general_out]
+)
+
+actions = udiskie_actions + general_actions
+
+rofi_opts = "\n\n".join(
+    [format_actions(a) for a in [udiskie_actions, general_actions] if len(a) > 0]
+)
 
 rofi_cmd = [
     "rofi",
