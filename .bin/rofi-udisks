@@ -1,54 +1,207 @@
-#! /bin/bash
+#! /usr/bin/env python3
 
-# rofi prompt to mount block devices with udisks
+"""
+Rofi interface for devices
 
-devices="$(udiskie-info -a -o '{is_mounted} {is_filesystem} {device_file} {id_label}')"
-devarr=""
-mounted_devices=()
+Technically it manages two types of devices with two tools:
+- removable media with udiskie
+- cifs/nfs with udevil
 
-has_filesystem () {
-    [[ "True" == "$(echo "$1" | awk '{ print $2; }')" ]]
-}
+For the latter this script assumes a table of mounts and options
+specified by the GENERAL_MNTS_PATH variable defined below. In addition
+to udiskie and udevil, it also assumes that notify-send is installed
+so it can spam the user with useful information as well as libsecret
+if credentials are stored in the keyring.
 
-is_mounted () {
-    [[ "True" == "$(echo "$1" | awk '{ print $1; }')" ]]
-}
+TODO
+- implement sshfs
+- add bulk commands (dis/mount all)
+- add argument parsing to make the interface similar to other rofi cmds
+  (this is mostly for xmonad so I can easily control which monitor
+   gets the rofi box)
+"""
 
-while read -r dev
-do
-    if has_filesystem "$dev"; then
-        path="$(echo "$dev" | awk '{ print $3 }')"
-        label="$(echo "$dev" | awk '{ print $4 }')"
-        if is_mounted "$dev"; then
-            mounted_devices+=("$path")
-            mounted="* "
-        else
-            mounted="  "
-        fi
-        devarr+="$mounted$path - $label\n"
-    fi
-done <<< "$devices"
 
-## TODO add an options file to mount network drives
+import os
+import os.path
+import re
+from subprocess import Popen, PIPE, STDOUT
 
-theme='#element.selected.normal { background-color: #999933; }'
+UDISKIE_CMD = [
+    "udiskie-info",
+    "-a",
+    "-o",
+    "'{is_mounted} {is_filesystem} {device_file} {id_label}'",
+]
 
-## TODO pass cmdline options to mimic the interface of nm-dmenu
-## (eg set -m -4 when calling instead of hardcoding)
-target_path=$(echo -e "$devarr" | \
-                  rofi -m -4 -dmenu -theme-str "$theme" -p "Devices" | \
-                  cut -c3- | \
-                  cut -d' ' -f1)
+GENERAL_MNTS_PATH = os.path.join(os.getenv("XDG_CONFIG_HOME"), "rofi", "devices.tsv")
 
-if [ -n "$target_path" ]; then
-    ## this assumes that paths will never contain spaces
-    if [[ "${mounted_devices[*]}" =~ $target_path ]]; then
-        ## TODO replace this using the notify_command in the config file
-        out=$(udisksctl unmount -b "$target_path" 2>&1)
-        if [[ $? -ne 0 ]]; then
-            notify-send "$out"
-        fi
-    else
-        udisksctl mount -b "$target_path"
-    fi
-fi
+
+class Action(object):
+    def __init__(self, entry):
+        self.entry = entry
+
+    def run(self):
+        pass
+
+    def __eq__(self, other):
+        return self.entry == other
+
+
+class Blank(Action):
+    def __init__(self):
+        super().__init__("")
+
+
+def fmt_rofi_label(is_mounted, path, label):
+    mount_str = "*" if is_mounted else ""
+    return "{:2}{} - {}".format(mount_str, label, path)
+
+
+def notify(res, is_mounted, label):
+    if res:
+        res.communicate()
+        status = res.returncode
+
+        if is_mounted:
+            subcmd = "unmount"
+        else:
+            subcmd = "mount"
+        if status == 0:
+            msg = "Successfully {}ed ".format(subcmd)
+        else:
+            msg = "Failed to {} ".format(subcmd)
+
+        Popen(["notify-send", msg + label])
+
+
+class UdiskieDevice(Action):
+    def __init__(self, is_mounted, path, label):
+        entry = fmt_rofi_label(is_mounted, path, label)
+        Action.__init__(self, entry)
+        self.is_mounted = is_mounted
+        self.path = path
+        self.label = label
+
+    def run(self):
+        if self.is_mounted:
+            subcmd = "unmount"
+        else:
+            subcmd = "mount"
+        res = Popen(
+            ["udisksctl", subcmd, "-b", self.path], stdout=PIPE, stderr=PIPE, text=True,
+        )
+        notify(res, self.is_mounted, self.label)
+
+
+class GenericDevice(Action):
+    def __init__(self, label, mtype, path, mountpoint, options, creds):
+        with open("/proc/mounts", "r") as f:
+            self.is_mounted = path in f.read()
+        entry = fmt_rofi_label(self.is_mounted, path, label)
+        super().__init__(entry)
+        self.mtype = mtype
+        self.path = path
+        self.label = label
+        self.options = options
+        self.mountpoint = mountpoint
+        self.creds = creds
+
+    # TODO add sshfs crap
+    def run(self):
+        if self.mtype == "sshfs":
+            pass  # ssh is special...
+        else:
+            if self.is_mounted:
+                res = self._unmount_udevil()
+            else:
+                res = self._mount_udevil()
+        notify(res, self.is_mounted, self.label)
+
+    def _mount_udevil(self):
+        opts = self._add_credentials()
+        return Popen(
+            ["udevil", "mount", "-o", opts, "-t", self.mtype, self.path],
+            stdout=PIPE,
+            stderr=PIPE,
+            text=True,
+        )
+
+    def _unmount_udevil(self):
+        mountpoint = self._get_mountpoint()
+        if mountpoint:
+            return Popen(
+                ["udevil", "unmount", mountpoint], stdout=PIPE, stderr=PIPE, text=True,
+            )
+
+    def _get_mountpoint(self):
+        with open("/proc/mounts", "r") as f:
+            for l in f:
+                if self.path in l:
+                    return l.split(" ")[1]
+
+    def _add_credentials(self):
+        if self.creds:
+            if self.creds.startswith("secret:"):
+                query = self.creds.replace("secret:", "")
+                # TODO this might need to change depending on the
+                # protocol
+                passwd = self._get_secret(query)
+                return "{},password={}".format(self.options, passwd)
+        return self.options
+
+    def _get_secret(self, query):
+        cmd = ["secret-tool", "lookup"] + re.split("[=,]", query)
+        return Popen(cmd, stdout=PIPE, stderr=STDOUT, text=True).communicate()[0]
+
+
+udiskie_out = (
+    Popen(UDISKIE_CMD, stdout=PIPE, stderr=STDOUT, text=True)
+    .communicate()[0]
+    .strip()
+    .split("\n")
+)
+
+with open(GENERAL_MNTS_PATH, "r") as f:
+    general_out = f.read().rstrip("\n").split("\n")[1:]
+
+
+def udiskie_init(line):
+    is_mounted, is_fs, path, label = line[1:-1].split(" ")
+    if is_fs == "True":
+        is_mounted = is_mounted == "True"
+        return UdiskieDevice(is_mounted, path, label)
+
+
+actions = (
+    [udiskie_init(line) for line in udiskie_out]
+    + [Blank()]
+    + [GenericDevice(*line.split("\t")) for line in general_out]
+)
+
+actions = list(filter(lambda x: x is not None, actions))
+
+rofi_opts = "\n".join(list(map(lambda x: x.entry, actions)))
+
+rofi_cmd = [
+    "rofi",
+    "-m",
+    "-4",
+    "-dmenu",
+    "-theme-str",
+    "#element.selected.normal { background-color: #999933; }",
+    "-p",
+    "Devices",
+]
+
+rofi_out = (
+    Popen(rofi_cmd, stdout=PIPE, stderr=STDOUT, text=True, stdin=PIPE)
+    .communicate(input=rofi_opts)[0]
+    .rstrip()
+)
+
+if rofi_out != "":
+    for a in actions:
+        if a == rofi_out:
+            a.run()
+            break
