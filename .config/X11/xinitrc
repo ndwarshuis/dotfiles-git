@@ -1,17 +1,5 @@
 #!/bin/sh
 
-# note: there is a constant flame war as to who should start
-# services, xinit or systemd. As of now (Oct 2019) there is no
-# way to make an xorg unit without running it as root (oops) so
-# therefore there is no way for any services that require
-# DISPLAY or XAUTHORITY to start "after" xorg is started. These
-# must be started here...or inside the exec whatever session using
-# its autostart service feature (if available)
-
-# ...additionally, it seems that PATH is not set for systemd --user
-# units either, but it is set here...so start anything requiring PATH
-# after this file as well
-
 userresources="$XDG_CONFIG_HOME/X11/xresources"
 
 if [ -f "$userresources" ]; then
@@ -19,39 +7,77 @@ if [ -f "$userresources" ]; then
 fi
 
 start_xkb() {
-	setxkbmap hypermode
-	xcape-layer &
+    # Set up my custom keyboard layout. This includes a custom keymap
+    # as well a set of keyrelease bindings to be implemented with
+    # xcape
+
+    # Set the keymap. NOTE: it is assumed that this keymap is also set
+    # in the X11 root configuration (eg in /etc) which will ensure
+    # that hotplugged keyboards are updated with this layout. The
+    # following command is still needed here so that xcape binds to
+    # the right keymap (I think...xcape doesn't seem to work if I take
+    # this out)
+    setxkbmap hypermode
+
+    # Start the xcape manager (a custom python script). This will
+    # stop xcape when virtual machines have focus (if I don't do that
+    # they get two keypresses for all xcape'd keys) and restart it
+    # when anything else has focus
+    xman &
 }
 
 start_services() {
-	greenclip daemon &
-	pgrep redshift &> /dev/null || redshift &> /dev/null &
-	dunst &
-	# urxvtd -q -f -o
-}
+    # Start all services that require the X server
 
-start_panel() {
-	xmobar &
-	stalonetray
+    # NOTE: there seems to be a constant flame war as to who should
+    # start services, xinit or systemd. As of now (Oct 2019) there is
+    # no way to make an xorg unit without running it as root;
+    # therefore there is no way for any services that require DISPLAY
+    # or XAUTHORITY to start "after" xorg is started using systemd.
+    # These must be started here or inside the window manager/desktop
+    # environment using its autostart service feature (if available).
+    # Additionally, it seems that PATH is not set for systemd --user
+    # units either, but it is set here...so start anything requiring
+    # PATH in this file as well
+
+    # NOTE: assume gnome-keyring-daemon is started using PAM
+    greenclip daemon &
+    pgrep redshift 2>&1 /dev/null || redshift 2>&1 /dev/null &
+    dunst &
+    emacs-start &
+    seafile-applet &
+    flameshot &
 }
 
 start_ui() {
-	# conky -d
-	compton --config .config/compton.conf -b
-	feh --no-fehbg --bg-fill ~/.local/share/backgrounds/wallpaper.png &
-	xsetroot -cursor_name left_ptr
+    # Set up the UI and launch pertinent programs/services
+
+    # First, figure out how many monitors we have. This is normally
+    # done using a udev rule but that only applies when monitors are
+    # begin inserted/removed. We need to run this once to get the
+    # right configuration for X. NOTE: this needs to be first so that
+    # other programs like conky and feh can place themselves on the
+    # right monitor
+    autorandr --change
+    feh --no-fehbg --bg-scale --bg-fill \
+        ~/.local/share/backgrounds/wallpaper.png &
+    conky -d
+    picom --config .config/picom.conf -b
+    xsetroot -cursor_name left_ptr
+    # NOTE: the systemd override only seems to work on VTs and not X
+    # sessions
+    numlockx on
 }
 
 start_xmonad() {
-	start_xkb
-	start_services
-	start_ui
-	exec xmonad
+    start_xkb
+    start_services
+    start_ui
+    exec xmonad
 }
 
 # switch gpus as needed
 /usr/bin/prime-offload > /dev/null 2>&1
 
-# start_xmonad
-exec cinnamon-session
-
+start_xmonad
+#exec cinnamon-session
