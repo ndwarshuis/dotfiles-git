@@ -27,38 +27,32 @@ import os.path
 import re
 from subprocess import Popen, PIPE, STDOUT
 
-UDISKIE_CMD = [
-    "udiskie-info",
-    "-a",
-    "-o",
-    "'{is_mounted} {is_filesystem} {device_file} {id_label}'",
-]
 
-GENERAL_MNTS_PATH = os.path.join(os.getenv("XDG_CONFIG_HOME"), "rofi", "devices.tsv")
+def remove_none(xs):
+    """Accept list XS and return new list with all None's removed."""
+    return list(filter(lambda x: x is not None, xs))
 
 
-class Action(object):
-    def __init__(self, entry):
-        self.entry = entry
+def fmt_rofi_entry(is_mounted, path, label):
+    """Format an entry for a device as it will appear in the rofi prompt.
 
-    def run(self):
-        pass
-
-    def __eq__(self, other):
-        return self.entry == other
-
-
-class Blank(Action):
-    def __init__(self):
-        super().__init__("")
-
-
-def fmt_rofi_label(is_mounted, path, label):
+    IS_MOUNTED is a boolean flag representing if the device is mounted.
+    PATH is the device path for the device. LABEL is the filesystem
+    label if the device is a removable drive or some indentifying
+    string if not.
+    """
     mount_str = "*" if is_mounted else ""
     return "{:2}{} - {}".format(mount_str, label, path)
 
 
 def notify(res, is_mounted, label):
+    """Spawn a notification for device events.
+
+    RES is the object return from Popen (which in this case is assumed
+    to be running a mounting event. IS_MOUNTED is a boolean which is
+    true of the device in question has been mounted. LABEL is like
+    the same argument in "fmt_rofi_entry"
+    """
     if res:
         res.communicate()
         status = res.returncode
