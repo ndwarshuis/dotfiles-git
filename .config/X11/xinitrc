@@ -42,10 +42,21 @@ start_services() {
 
     # NOTE: assume gnome-keyring-daemon is started using PAM
     greenclip daemon &
-    pgrep redshift 2>&1 /dev/null || redshift 2>&1 /dev/null &
+    # pgrep redshift 2>&1 /dev/null || redshift 2>&1 /dev/null &
+    redshift &
     dunst &
+    # Run custom script to start emacs server
     emacs-start &
+    # Enable the seafile applet. This is strange because running it
+    # once will make it act like a daemon and running it a second
+    # time will make it act like a client (there are no separate
+    # commands for the two). So start it here and any called to
+    # 'seafile-applet' will launch the seafile gui
     seafile-applet &
+    # This is required for openconnect to authenticate VPNs
+    nm-applet &
+    # Flameshot requires its daemon to be running if it is not
+    # started inside a dbus-launch call
     flameshot &
 }
 
