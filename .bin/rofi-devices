@@ -69,12 +69,48 @@ def notify(res, is_mounted, label):
         Popen(["notify-send", msg + label])
 
 
+class Action(object):
+    """A superclass for actions to populate the rofi menu.
+
+    Accepts single attribute ENTRY which is the literal string that
+    will appear in the rofi prompt. Equality between two of this type
+    will be assessed using the entry attribute.
+
+    The method "run" is a stub to be overridden and will hold the
+    command to be performed if the action is selected in the rofi
+    prompt.
+    """
+
+    def __init__(self, entry):
+        self.entry = entry
+
+    def run(self):
+        pass
+
+    def __eq__(self, other):
+        return self.entry == other
+
+
 class UdiskieDevice(Action):
+    """A class for removable devices queried by udiskie.
+
+    Attributes:
+    - is_mounted: boolean (True if the device is mounted)
+    - path: the device path
+    - label: the filesystem label (if applicable)
+
+    Methods:
+    - run: if device is mounted, will unmount the device and vice
+      versa; will also notify the user of success or failure for
+      mount or dismount operations
+    """
+
     def __init__(self, is_mounted, path, label):
-        entry = fmt_rofi_label(is_mounted, path, label)
+        entry = fmt_rofi_entry(is_mounted, path, label)
         Action.__init__(self, entry)
         self.is_mounted = is_mounted
         self.path = path
+        # TODO what if the filesystem has no label?
         self.label = label
 
     def run(self):
@@ -89,10 +125,31 @@ class UdiskieDevice(Action):
 
 
 class GenericDevice(Action):
+    """A class for generic devices to be mounted by udevil and sshfs
+
+    Attributes:
+    - label: a string identifier for the device
+    - mtype: the type of device to be mounted (eg cifs, sshfs, etc)
+    - path: the device path
+    - mountpoint: the path where the device is to be mounted; if None
+      the default path will be used (eg /mnt/media for udevil)
+    - options: the mount options to be used
+    - creds: the credentials to be used; for now the only format is a
+      string like "secret:key1=val1,key2=val2" where the keys and
+      values are attribute/value pairs to be queried with the command
+      "secret-tool lookup" (eg the libsecret interface) which should
+      return a valid password to be added to the mount options
+
+    Methods:
+    - run: if device is mounted, will unmount the device and vice
+      versa; will also notify the user of success or failure for
+      mount or dismount operations
+    """
+
     def __init__(self, label, mtype, path, mountpoint, options, creds):
         with open("/proc/mounts", "r") as f:
             self.is_mounted = path in f.read()
-        entry = fmt_rofi_label(self.is_mounted, path, label)
+        entry = fmt_rofi_entry(self.is_mounted, path, label)
         super().__init__(entry)
         self.mtype = mtype
         self.path = path
@@ -113,6 +170,7 @@ class GenericDevice(Action):
         notify(res, self.is_mounted, self.label)
 
     def _mount_udevil(self):
+        """Mount a device with udevil"""
         opts = self._add_credentials()
         return Popen(
             ["udevil", "mount", "-o", opts, "-t", self.mtype, self.path],
@@ -122,6 +180,7 @@ class GenericDevice(Action):
         )
 
     def _unmount_udevil(self):
+        """Unmount a device with udevil"""
         mountpoint = self._get_mountpoint()
         if mountpoint:
             return Popen(
@@ -129,12 +188,14 @@ class GenericDevice(Action):
             )
 
     def _get_mountpoint(self):
+        """Return the current mountpoint for self given a device path"""
         with open("/proc/mounts", "r") as f:
             for l in f:
                 if self.path in l:
                     return l.split(" ")[1]
 
     def _add_credentials(self):
+        """Return mount options string with password added"""
         if self.creds:
             if self.creds.startswith("secret:"):
                 query = self.creds.replace("secret:", "")
@@ -145,24 +206,23 @@ class GenericDevice(Action):
         return self.options
 
     def _get_secret(self, query):
+        """Return password using secret-tool given QUERY
+        QUERY is a string of keyval pairs like "k1=v1,k2=v2"
+        """
         cmd = ["secret-tool", "lookup"] + re.split("[=,]", query)
         return Popen(cmd, stdout=PIPE, stderr=STDOUT, text=True).communicate()[0]
 
 
-def udiskie_init(line):
-    is_mounted, is_fs, path, label = line[1:-1].split(" ")
-    if is_fs == "True":
-        is_mounted = is_mounted == "True"
-        return UdiskieDevice(is_mounted, path, label)
+#
+# Retrieve available removable drives using udiskie
+#
 
-
-def remove_none(xs):
-    return list(filter(lambda x: x is not None, xs))
-
-
-def format_actions(actions):
-    return "\n".join(list(map(lambda x: x.entry, actions)))
-
+UDISKIE_CMD = [
+    "udiskie-info",
+    "-a",
+    "-o",
+    "'{is_mounted} {is_filesystem} {device_file} {id_label}'",
+]
 
 udiskie_out = (
     Popen(UDISKIE_CMD, stdout=PIPE, stderr=STDOUT, text=True)
@@ -171,11 +231,29 @@ udiskie_out = (
     .split("\n")
 )
 
+
+def udiskie_init(line):
+    """Return UdiskieDevice object given a line of udiskie output.
+    LINE is a newline-stripped line from "udiskie -a ..." and is
+    assumed to be formatted like "IS_MOUNTED IS_FILESYSTEM PATH LABLE".
+    Anything that is not a filesystem device will be returned as None."""
+    is_mounted, is_fs, path, label = line[1:-1].split(" ")
+    if is_fs == "True":
+        is_mounted = is_mounted == "True"
+        return UdiskieDevice(is_mounted, path, label)
+
+
 udiskie_actions = (
     remove_none([udiskie_init(line) for line in udiskie_out])
     if len("".join(udiskie_out)) > 0
     else []
 )
+
+#
+# Retrieve available general devices given a configuration file
+#
+
+GENERAL_MNTS_PATH = os.path.join(os.getenv("XDG_CONFIG_HOME"), "rofi", "devices.tsv")
 
 with open(GENERAL_MNTS_PATH, "r") as f:
     # TODO this assumes the tsv file has headers as the first row
@@ -187,11 +265,23 @@ general_actions = remove_none(
     [GenericDevice(*line.split("\t")) for line in general_out]
 )
 
+#
+# Combine all actions and call the rofi interface
+#
+
 actions = udiskie_actions + general_actions
 
-rofi_opts = "\n\n".join(
-    [format_actions(a) for a in [udiskie_actions, general_actions] if len(a) > 0]
-)
+
+def format_actions(action_list):
+    return "\n".join(list(map(lambda x: x.entry, action_list)))
+
+
+def format_options(action_lists):
+    fmtd = [format_actions(a) for a in action_lists if len(a) > 0]
+    return "\n\n".join(fmtd)
+
+
+rofi_opts = format_options([udiskie_actions, general_actions])
 
 rofi_cmd = [
     "rofi",
@@ -210,8 +300,14 @@ rofi_out = (
     .rstrip()
 )
 
+#
+# Given entry string from rofi, find corresponding action and execute
+#
+
 if rofi_out != "":
     for a in actions:
         if a == rofi_out:
             a.run()
+            # TODO throw error if this is never encountered (it means
+            # I formated the entries incorrectly)
             break
