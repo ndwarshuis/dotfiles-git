@@ -1,0 +1,4 @@
+LABEL	TYPE	PATH	MOUNTPOINT	OPTIONS	PASSWORD
+Roylab	cifs	ad.gatech.edu/bme/labs/roy-lab		user=ndwarshuis3,workgroup=ad,iocharset=utf8,rw,uid=1000,gid=1000	secret:user=ndwarshuis3@gatech.edu,host=outlook.office365.com
+MC3M	cifs	ad.gatech.edu/bme/labs/mc3m		user=ndwarshuis3,workgroup=ad,iocharset=utf8,rw,uid=1000,gid=1000	secret:user=ndwarshuis3@gatech.edu,host=outlook.office365.com
+MusicCloud	sshfs	portnoy4prez:/mnt/data/Music	/mnt/data/Music		
