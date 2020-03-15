@@ -32,7 +32,7 @@ i3lock -i "$IPATH" \
 	   --timestr="%H:%M" \
 	   --datecolor=ffffffff \
 	   --datesize=42 \
-	   --datestr="%b %m, %Y" \
+	   --datestr="%b %d, %Y" \
        --date-align 0 \
        --datepos="$datepos" \
 	   --wrongsize=72 \
