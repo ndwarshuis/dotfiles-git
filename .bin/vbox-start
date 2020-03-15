@@ -1,0 +1,38 @@
+#! /bin/bash
+
+# start Virtualbox VM with an event hook that fires when closing
+# takes one argument which is the string name of the VM to start
+
+if [[ -z "$1" ]]; then
+    echo "No VM specified"
+    exit 1
+fi
+
+# when VBoxManage runs it spawns a new process with the machine uuid
+# as part of the full command. This is the process we wish to monitor
+# in order to fire an event when it closes. Therefore, need to get the
+# machine uuid for the target VM from the config files (yes VBoxManage
+# can do this but it seems to randomly take a long time; sed is way
+# more reliable)
+
+vbox_conf="$XDG_CONFIG_HOME/VirtualBox/VirtualBox.xml"
+vbox_home=$(sed -n 's/.*defaultMachineFolder=\"\(.*\)\" defaultHardDiskFormat.*/\1/p' "$vbox_conf")
+vm_conf="$vbox_home/$1/$1.vbox"
+
+if [[ ! -e "$vm_conf" ]]; then
+    echo "Invalid VM specified"
+    exit 1
+fi
+
+machine_uuid=$(sed -n 's/.*Machine uuid=\"{\(.*\)}\".*/\1/p' "$vm_conf")
+
+VBoxManage startvm "$1"
+
+vm_pid=$(pgrep -f "$machine_uuid")
+
+# ew polling...
+while [ -d "/proc/$vm_pid" ]; do
+    sleep 0.1
+done
+
+#xitsign
