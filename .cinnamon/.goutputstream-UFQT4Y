@@ -1,0 +1,25 @@
+info t=2017-08-09T06:08:48.416Z Cinnamon.AppSystem.get_default() started in 42 ms
+info t=2017-08-09T06:08:48.419Z loading user theme: /usr/share/themes/Zukitre/cinnamon/cinnamon.css
+info t=2017-08-09T06:08:48.432Z added icon directory: /usr/share/themes/Zukitre/cinnamon
+info t=2017-08-09T06:08:48.553Z PlacesManager: Updating devices
+info t=2017-08-09T06:08:48.573Z loaded at Wed Aug 09 2017 02:08:48 GMT-0400 (EDT)
+info t=2017-08-09T06:08:48.817Z Loaded applet menu@cinnamon.org in 243 ms
+info t=2017-08-09T06:08:48.823Z Loaded applet systray@cinnamon.org in 6 ms
+info t=2017-08-09T06:08:48.835Z Loaded applet window-list@cinnamon.org in 11 ms
+info t=2017-08-09T06:08:48.850Z Loaded applet workspace-switcher@cinnamon.org in 14 ms
+info t=2017-08-09T06:08:48.859Z Role locked: notifications
+info t=2017-08-09T06:08:48.862Z Loaded applet notifications@cinnamon.org in 11 ms
+info t=2017-08-09T06:08:48.868Z Loaded applet removable-drives@cinnamon.org in 6 ms
+info t=2017-08-09T06:08:48.914Z Loaded applet network@cinnamon.org in 45 ms
+info t=2017-08-09T06:08:48.945Z Loaded applet sound@cinnamon.org in 31 ms
+info t=2017-08-09T06:08:48.954Z Loaded applet inhibit@cinnamon.org in 8 ms
+info t=2017-08-09T06:08:48.969Z Loaded applet power@cinnamon.org in 15 ms
+info t=2017-08-09T06:08:48.975Z Loaded applet lock@petrucci4prez in 6 ms
+info t=2017-08-09T06:08:48.990Z Loaded applet calendar@cinnamon.org in 14 ms
+info t=2017-08-09T06:08:48.990Z AppletManager.init() started in 417 ms
+info t=2017-08-09T06:08:48.991Z Cinnamon took 626 ms to start
+error t=2017-08-09T06:08:49.106Z /org/freedesktop/UPower/devices/battery_BAT0:= DELL JXFRP1C
+info t=2017-08-09T06:08:49.370Z Adding systray: clipit (24x24px)
+info t=2017-08-09T06:08:49.371Z Hiding systray: network
+info t=2017-08-09T06:08:51.138Z Adding systray: seafile client (24x24px)
+error t=2017-08-09T06:09:01.770Z /org/freedesktop/UPower/devices/battery_BAT0:= DELL JXFRP1C

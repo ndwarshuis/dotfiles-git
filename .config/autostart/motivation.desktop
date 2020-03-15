@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Computational Wisdom
+Name[en_US]=motivation
+Comment=Computer spits out mildly witty, motivational crap
+Exec=motivation.sh
+StartupNotify=false
+Terminal=false
+Hidden=true
+X-GNOME-Autostart-enabled=true
+

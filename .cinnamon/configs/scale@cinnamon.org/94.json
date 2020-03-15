@@ -1,0 +1,9 @@
+{
+    "activate-on-hover": {
+        "type": "checkbox",
+        "default": false,
+        "description": "Activate scale on hover",
+        "value": false
+    },
+    "__md5__": "4411bc8c0ee8dc9cda2a2ce8ca0a99ea"
+}

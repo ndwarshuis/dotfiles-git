@@ -1,0 +1,7 @@
+{
+    "dangerous": false, 
+    "description": "Shows whether caps lock/num lock is on", 
+    "icon": "numlock-enabled", 
+    "uuid": "lock@petrucci4prez", 
+    "name": "Num Lock/Caps Lock indicator"
+}

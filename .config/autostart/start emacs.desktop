@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Exec=emacs-start
+X-GNOME-Autostart-enabled=true
+NoDisplay=false
+Hidden=false
+Name[en_US]=start emacs
+Comment[en_US]=start emacs..duh
+X-GNOME-Autostart-Delay=0

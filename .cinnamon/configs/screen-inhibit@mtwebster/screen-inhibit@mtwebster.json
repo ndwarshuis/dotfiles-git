@@ -1,0 +1,34 @@
+{
+    "head": {
+        "type": "header",
+        "description": "Icons"
+    },
+    "off-icon": {
+        "type": "iconfilechooser",
+        "default": "video-display-symbolic",
+        "description": "Power management allowed icon:",
+        "tooltip": "Select an icon file, or you can type an icon name into the entry box",
+        "indent": true,
+        "value": "video-display-symbolic"
+    },
+    "on-icon": {
+        "type": "iconfilechooser",
+        "default": "dialog-error-symbolic",
+        "description": "Power management prevented icon:",
+        "tooltip": "Select an icon file, or you can type an icon name into the entry box",
+        "indent": true,
+        "value": "weather-clear-symbolic"
+    },
+    "head1": {
+        "type": "header",
+        "description": "Keybinding"
+    },
+    "keybinding": {
+        "type": "keybinding",
+        "description": "Set the keybinding for screensaver inhibit",
+        "default": "<Control>i",
+        "indent": true,
+        "value": ""
+    },
+    "__md5__": "37301bce7993f2f865429d4437057d74"
+}

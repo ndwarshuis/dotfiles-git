@@ -1,0 +1,7 @@
+{
+    "dangerous": true, 
+    "description": "Cinnamon power monitor applet by petrucci4prez", 
+    "icon": "battery-full-charging", 
+    "uuid": "power@petrucci4prez", 
+    "name": "Power Monitor"
+}

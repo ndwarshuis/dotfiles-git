@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Exec=xman
+X-GNOME-Autostart-enabled=true
+NoDisplay=false
+Hidden=false
+Name[en_US]=xcape manager
+Comment[en_US]=activate xcape layer for custom layout
+X-GNOME-Autostart-Delay=0
