@@ -31,7 +31,7 @@
 !/.config/ccache.config
 !/.config/compton.conf
 !/.config/conky
-!/.config/dunst
+!/.config/dunstrc
 !/.config/fontconfig
 !/.config/git
 !/.config/gtk-2.0
