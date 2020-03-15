@@ -78,6 +78,7 @@ start_ui() {
     # NOTE: the systemd override only seems to work on VTs and not X
     # sessions
     numlockx on
+    xss-lock --ignore-sleep screenlock &
 }
 
 start_xmonad() {
