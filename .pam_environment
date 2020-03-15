@@ -147,6 +147,12 @@ ICEAUTHORITY            DEFAULT=${XDG_RUNTIME_DIR}/ICEauthority
 XAUTHORITY              DEFAULT=${XDG_RUNTIME_DIR}/Xauthority
 XINITRC                 DEFAULT=${XDG_CONFIG_HOME}/X11/xinitrc
 
+### XMonad
+#
+XMONAD_CACHE_DIR        DEFAULT=${XDG_CACHE_HOME}/xmonad
+XMONAD_CONFIG_DIR       DEFAULT=${XDG_CONFIG_HOME}/xmonad
+XMONAD_DATA_DIR         DEFAULT=${XDG_DATA_HOME}/xmonad
+
 ### (z)sh
 #
 HISTFILE                DEFAULT=${XDG_DATA_HOME}/zsh/history.log
