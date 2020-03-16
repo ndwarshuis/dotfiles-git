@@ -29,7 +29,7 @@
 /.config/*
 !/.config/aws
 !/.config/ccache.config
-!/.config/compton.conf
+!/.config/picom.conf
 !/.config/conky
 !/.config/dunstrc
 !/.config/fontconfig
