@@ -25,6 +25,7 @@ TODO
 import os
 import os.path
 import re
+import sys
 from subprocess import Popen, PIPE, STDOUT
 
 
@@ -285,14 +286,16 @@ rofi_opts = format_options([udiskie_actions, general_actions])
 
 rofi_cmd = [
     "rofi",
-    "-m",
-    "-4",
     "-dmenu",
     "-theme-str",
     "#element.selected.normal { background-color: #999933; }",
     "-p",
     "Devices",
 ]
+
+# any command line arguments get passed through to rofi
+if len(sys.argv) > 1:
+    rofi_cmd = rofi_cmd + sys.argv[1:]
 
 rofi_out = (
     Popen(rofi_cmd, stdout=PIPE, stderr=STDOUT, text=True, stdin=PIPE)
