@@ -20,6 +20,7 @@
 
 # don't need cache-like things
 /.cache/*
+
 # need to manually add pg history
 !/.cache/pg/
 /.thumbnails
@@ -73,11 +74,6 @@
 
 ### non-xdg things (all hardcoded by source)
 
-# cinnamon
-/.cinnamon
-/.gnome2
-/.face
-
 # steam
 /.steam*
 
@@ -92,9 +88,9 @@
 /.imagej
 /.java
 /.masterpdfeditor
-/.mozilla
 /.pki
 /.sane
+
 # hardcoded in arch install
 /.tor-browser
 /.viminfo
