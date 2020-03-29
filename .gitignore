@@ -78,6 +78,9 @@
 /.gnome2
 /.face
 
+# steam
+/.steam*
+
 # zotero
 /.zotero
 /Zotero
