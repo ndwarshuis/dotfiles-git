@@ -19,11 +19,17 @@ start_xkb() {
     # this out)
     setxkbmap hypermode
 
-    # Start the xcape manager (a custom python script). This will
+    # Start the xcape manager (a custom haskell program). This will
     # stop xcape when virtual machines have focus (if I don't do that
     # they get two keypresses for all xcape'd keys) and restart it
     # when anything else has focus
-    xman &
+    KEYS="Control_L=Escape"
+    KEYS="$KEYS;Control_R=Return"
+    KEYS="$KEYS;Super_L=Tab"
+    KEYS="$KEYS;Super_R=backslash"
+    KEYS="$KEYS;Alt_R=space"
+    KEYS="$KEYS;ISO_Level3_Shift=XF86Search"
+    xman-hs "$KEYS" "Oracle VM VirtualBox$" &
 }
 
 start_services() {
