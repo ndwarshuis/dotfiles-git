@@ -11,6 +11,7 @@ xoffset=$(("$xpos" + "$width" / 2))
 datepos="$xoffset:600"
 
 i3lock --color=000000 \
+       --pass-media-keys \
 	   --nofork \
 	   --ignore-empty-password \
 	   --screen=0 \
