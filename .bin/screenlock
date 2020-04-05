@@ -2,14 +2,15 @@
 
 ## lock the screen using i3lock
 
-IPATH=~/.local/share/backgrounds/lockscreen1.png
+# IPATH=~/.local/share/backgrounds/lockscreen1.png
 
-width=$(xrandr | head -n 1 | sed -n 's/^.*current \([0-9]*\) .*/\1/p')
-xoffset=$(("$width" / 2))
+geometry=$(xrandr | sed -n 's/^.*primary \([0-9]*\)x[0-9]*+\([0-9]\)*+[0-9]* .*/\1 \2/p')
+width=$(echo "$geometry" | cut -f1 -d" ")
+xpos=$(echo "$geometry" | cut -f2 -d" ")
+xoffset=$(("$xpos" + "$width" / 2))
 datepos="$xoffset:600"
 
-i3lock -i "$IPATH" \
-	   --color=000000 \
+i3lock --color=000000 \
 	   --nofork \
 	   --ignore-empty-password \
 	   --screen=0 \
