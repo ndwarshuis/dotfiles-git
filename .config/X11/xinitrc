@@ -81,7 +81,6 @@ start_ui() {
         ~/.local/share/backgrounds/wallpaper.png &
     conky -d
     picom --config .config/picom.conf -b
-    xsetroot -cursor_name left_ptr
     # NOTE: the systemd override only seems to work on VTs and not X
     # sessions
     numlockx on
