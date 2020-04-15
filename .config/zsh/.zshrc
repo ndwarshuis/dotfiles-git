@@ -207,6 +207,11 @@ alias sudo='sudo '
 alias hs='history 1 | grep'
 exists mfsconsole && alias msfconsole="msfconsole --quiet -x \"db_connect ${USER}@msf\""
 
+# libreoffice
+exists libreoffice && alias localc='libreoffice --calc'
+exists libreoffice && alias lowriter='libreoffice --writer'
+exists libreoffice && alias loimpress='libreoffice --impress'
+
 # xdg conformity
 exists arm && alias arm='arm -c "$XDG_CONFIG_HOME"/arm/armrc'
 exists gpg2 && alias gpg2='gpg2 -c "$XDG_CONFIG_HOME"/gnupg'
