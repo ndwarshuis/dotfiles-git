@@ -65,6 +65,8 @@ start_services() {
     # Flameshot requires its daemon to be running if it is not
     # started inside a dbus-launch call
     flameshot &
+    # Bitwarden rofi daemon with 60 minute timeout
+    rofi-bw -d 3600 &
 }
 
 start_ui() {
