@@ -51,9 +51,9 @@
 	background-color: @background;
 }
 #message {
-    border:       2px 0px 0px ;
+    border:       2px 0px 0px;
     border-color: @separatorcolor;
-    padding:      1px ;
+    padding:      5px 1px 3px 1px;
 }
 #textbox {
     text-color: @foreground;
