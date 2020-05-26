@@ -57,6 +57,7 @@
 !/.config/recoll/recoll.conf
 !/.config/redshift
 !/.config/rofi
+!/.config/rofi-extras
 !/.config/systemd
 # TODO add texmf here
 !/.config/X11
