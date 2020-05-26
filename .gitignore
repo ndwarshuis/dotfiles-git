@@ -61,6 +61,7 @@
 # TODO add texmf here
 !/.config/X11
 !/.config/xmonad
+!/.config/xman
 !/.config/zsh
 /.config/zsh/.zcompdump*
 
