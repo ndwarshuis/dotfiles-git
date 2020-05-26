@@ -78,6 +78,7 @@ MATLAB_LOG_DIR          DEFAULT=${XDG_DATA_HOME}/matlab/log
 ### mu
 #
 MU_HOME                 DEFAULT=${XDG_CACHE_HOME}/mu
+MAILDIR                 DEFAULT=/mnt/data/Mail
 
 ### nodejs
 #
