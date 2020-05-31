@@ -108,6 +108,10 @@ PGSERVICEFILE           DEFAULT=${XDG_CONFIG_HOME}/pg/pg_service.conf
 #
 PYTHONSTARTUP           DEFAULT=${XDG_CONFIG_HOME}/python/startup.py
 
+### pylint
+#
+PYLINTHOME		DEFAULT=${XDG_CACHE_HOME}/pylint
+
 # pyenv
 PYENV_ROOT              DEFAULT=${XDG_DATA_HOME}/pyenv
 # PYENV_SHELL             DEFAULT=zsh
