@@ -1,0 +1,14 @@
+#! /bin/bash
+
+# super hacky script to ensure rofi always appears on the focused workspace
+
+# get the viewport of the active workspace from _NET_DESKTOP_VIEWPORT
+# NOTE: assume xmonad is set up to actually set this atom
+viewport=$(wmctrl -d | grep '*' | awk '{ print $6 }')
+
+# make a pattern with the viewport to match the output name in xrandr
+pattern=$(echo "$viewport" | sed -E 's/(.*),(.*)/connected .*+\\+\1+\2/')
+name=$(xrandr -q | grep "$pattern" | awk '{ print $1 }')
+
+# pass the name to rofi...not sure what happens if we set the m flag twice
+/usr/bin/rofi "$@" -m "$name"
