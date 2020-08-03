@@ -13,6 +13,10 @@ XDG_RUNTIME_DIR         DEFAULT=/run/user/1000
 #
 # ANDROID_AVD_HOME        DEFAULT=@{HOME}/.android/avd
 
+### ansible
+#
+ANSIBLE_CONFIG          DEFAULT=${XDG_CONFIG_HOME}/ansible
+
 ### AQBanking
 #
 AQBANKING_HOME          DEFAULT=${XDG_CONFIG_HOME}/aqbanking
