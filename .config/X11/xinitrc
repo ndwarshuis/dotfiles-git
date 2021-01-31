@@ -6,98 +6,31 @@ if [ -f "$userresources" ]; then
     xrdb -merge "$userresources"
 fi
 
-start_xkb() {
-    # Set up my custom keyboard layout. This includes a custom keymap
-    # as well a set of keyrelease bindings to be implemented with
-    # xcape
-
-    # Set the keymap. NOTE: it is assumed that this keymap is also set
-    # in the X11 root configuration (eg in /etc) which will ensure
-    # that hotplugged keyboards are updated with this layout. The
-    # following command is still needed here so that xcape binds to
-    # the right keymap (I think...xcape doesn't seem to work if I take
-    # this out)
-    setxkbmap hypermode
-
-    # Start the xcape manager (a custom haskell program). This will
-    # stop xcape when virtual machines have focus (if I don't do that
-    # they get two keypresses for all xcape'd keys) and restart it
-    # when anything else has focus
-    KEYS="Control_L=Escape"
-    KEYS="$KEYS;Control_R=Return"
-    KEYS="$KEYS;Super_L=Tab"
-    KEYS="$KEYS;Super_R=backslash"
-    KEYS="$KEYS;Alt_R=space"
-    KEYS="$KEYS;ISO_Level3_Shift=XF86Search"
-    xman -t 500 "$KEYS" "^VirtualBox Machine$" &
-    echo starting xcape
-}
-
-start_services() {
-    # Start all services that require the X server
-
-    # NOTE: there seems to be a constant flame war as to who should
-    # start services, xinit or systemd. As of now (Oct 2019) there is
-    # no way to make an xorg unit without running it as root;
-    # therefore there is no way for any services that require DISPLAY
-    # or XAUTHORITY to start "after" xorg is started using systemd.
-    # These must be started here or inside the window manager/desktop
-    # environment using its autostart service feature (if available).
-    # Additionally, it seems that PATH is not set for systemd --user
-    # units either, but it is set here...so start anything requiring
-    # PATH in this file as well
-
-    # NOTE: assume gnome-keyring-daemon is started using PAM
-    greenclip daemon &
-    # pgrep redshift 2>&1 /dev/null || redshift 2>&1 /dev/null &
-    redshift &
-    dunst &
-    # Run custom script to start emacs server
-    emacs-start &
-    # Enable the seafile applet. This is strange because running it
-    # once will make it act like a daemon and running it a second
-    # time will make it act like a client (there are no separate
-    # commands for the two). So start it here and any called to
-    # 'seafile-applet' will launch the seafile gui
-    seafile-applet &
-    # This is required for openconnect to authenticate VPNs
-    nm-applet &
-    # Flameshot requires its daemon to be running if it is not
-    # started inside a dbus-launch call
-    flameshot &
-    # Bitwarden rofi daemon with 60 minute timeout
-    rofi-bw -d 3600 &
-}
-
-start_ui() {
-    # Set up the UI and launch pertinent programs/services
-
-    # First, figure out how many monitors we have. This is normally
-    # done using a udev rule but that only applies when monitors are
-    # begin inserted/removed. We need to run this once to get the
-    # right configuration for X. NOTE: this needs to be first so that
-    # other programs like conky and feh can place themselves on the
-    # right monitor
-    autorandr --change
-    feh --no-fehbg --bg-scale --bg-fill \
-        ~/.local/share/backgrounds/wallpaper.png &
-    conky -d
-    picom --config .config/picom.conf -b
-    # NOTE: the systemd override only seems to work on VTs and not X
-    # sessions
-    numlockx on
-    xss-lock --ignore-sleep screenlock &
-}
-
-start_xmonad() {
-    start_xkb
-    start_services
-    start_ui
-    exec xmonad
-}
-
-# switch gpus as needed
 /usr/bin/prime-offload > /dev/null 2>&1
 
-start_xmonad
-#exec cinnamon-session
+setxkbmap hypermode
+
+KEYS="Control_L=Escape"
+KEYS="$KEYS;Control_R=Return"
+KEYS="$KEYS;Super_L=Tab"
+KEYS="$KEYS;Super_R=backslash"
+KEYS="$KEYS;Alt_R=space"
+KEYS="$KEYS;ISO_Level3_Shift=XF86Search"
+xman -t 500 "$KEYS" "^VirtualBox Machine$" &
+
+greenclip daemon &
+redshift > /dev/null 2>&1 &
+dunst &
+emacs-start &
+seafile-applet > /dev/null 2>&1 &
+nm-applet > /dev/null 2>&1 &
+flameshot > /dev/null 2>&1 &
+rofi-bw -d 3600 &
+
+autorandr --change > /dev/null
+picom --config "$XDG_CONFIG_HOME/picom.conf" -b
+
+numlockx on
+xss-lock --ignore-sleep screenlock &
+
+exec xmonad
