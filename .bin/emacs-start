@@ -2,4 +2,4 @@
 
 # start the emacs daemon
 
-emacs --fg-daemon
+emacs --fg-daemon > /dev/null 2>&1
