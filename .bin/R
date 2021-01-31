@@ -60,7 +60,7 @@ if [ -f ".rundocker" ]; then
 
         # ESS sends some 'source' commands to the running R process
         # after it starts; these are in the emacs user directory
-        emacs_home="$HOME/.emacs.d"
+        emacs_home="$XDG_CONFIG_HOME/emacs"
         emacs_mnt="type=bind,source=$emacs_home,target=$emacs_home"
         opts+=(--mount "$emacs_mnt")
 
