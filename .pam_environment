@@ -2,168 +2,43 @@
 # XDG Overrides
 #--------------------#
 
-### base
-#
 XDG_CONFIG_HOME         DEFAULT=@{HOME}/.config
 XDG_CACHE_HOME          DEFAULT=@{HOME}/.cache
 XDG_DATA_HOME           DEFAULT=@{HOME}/.local/share
 XDG_RUNTIME_DIR         DEFAULT=/run/user/1000
 
-### android
-#
-# ANDROID_AVD_HOME        DEFAULT=@{HOME}/.android/avd
-
-### ansible
-#
-ANSIBLE_CONFIG          DEFAULT=${XDG_CONFIG_HOME}/ansible
-
-### AQBanking
-#
 AQBANKING_HOME          DEFAULT=${XDG_CONFIG_HOME}/aqbanking
-
-### aspell
-#
-# aspell directly must be manually created
 ASPELL_CONF             DEFAULT="per-conf ${XDG_CONFIG_HOME}/aspell/aspell.conf; personal ${XDG_CONFIG_HOME}/aspell/en.pws; repl ${XDG_CONFIG_HOME}/aspell/en.prepl"
-
-### AWS
-#
-AWS_CONFIG_FILE         DEFAULT=${XDG_CONFIG_HOME}/aws
-
-### cabal
-#
-# CABAL_CONFIG            DEFAULT=${XDG_CONFIG_HOME}/cabal/config
-
-### ccache
-#
 CCACHE_CONFIGPATH       DEFAULT=${XDG_CONFIG_HOME}/ccache.config
 CCACHE_DIR              DEFAULT=${XDG_CACHE_HOME}/ccache
-
-### Seafile
-#
-CCNET_CONF_DIR        DEFAULT=${XDG_CONFIG_HOME}/ccnet
-
-### gnupg
-#
+CCNET_CONF_DIR          DEFAULT=${XDG_CONFIG_HOME}/ccnet
 GNUPGHOME               DEFAULT=${XDG_CONFIG_HOME}/gnupg
-
-### Grip
-#
 GRIPHOME                DEFAULT=${XDG_CONFIG_HOME}/grip
-
-### gtk1/2
-#
 GTK2_RC_FILES           DEFAULT=${XDG_CONFIG_HOME}/gtk-2.0/gtkrc
-
-### haskell
-#
 STACK_ROOT              DEFAULT=${XDG_DATA_HOME}/stack
-
-### ipython/jupyter
-#
 IPYTHONDIR              DEFAULT=${XDG_CONFIG_HOME}/ipython
-JUPYTER_CONFIG_DIR      DEFAULT=${XDG_CONFIG_HOME}/jupyter
-
-### java
-#
-_JAVA_OPTIONS           DEFAULT=-Djava.util.prefs.userRoot=${XDG_CONFIG_HOME}/java/.userPrefs
-
-### less
-#
 LESSKEY                 DEFAULT=${XDG_CONFIG_HOME}/less/lesskey
 LESSHISTFILE            DEFAULT=-
-
-### MATLAB
-#
 MATLAB_PREFDIR          DEFAULT=${XDG_CONFIG_HOME}/matlab
-# this file must be manually created
 MATLAB_LOG_DIR          DEFAULT=${XDG_DATA_HOME}/matlab/log
-
-### mu
-#
 MU_HOME                 DEFAULT=${XDG_CACHE_HOME}/mu
 MAILDIR                 DEFAULT=/mnt/data/Mail
-
-### nodejs
-#
-NPM_CONFIG_USERCONFIG   DEFAULT=${XDG_CONFIG_HOME}/npm/npmrc
 NODE_REPL_HISTORY       DEFAULT=${XDG_DATA_HOME}/npm/node_repl.log
-
-### nvidia
-#
-CUDA_CACHE_PATH         DEFAULT=${XDG_CACHE_HOME}/nv
-
-### readline
-#
 INPUTRC                 DEFAULT=${XDG_CONFIG_HOME}/readline/inputrc
-
-### pacman
-#
 PKGDEST                 DEFAULT=/var/cache/pacman/pkg
-
-### POSTGRESQL
-#
-PSQLRC                  DEFAULT=${XDG_CONFIG_HOME}/pg/psqlrc
-PSQL_HISTORY            DEFAULT=${XDG_CACHE_HOME}/pg/psql_history
-PGPASSFILE              DEFAULT=${XDG_CONFIG_HOME}/pg/pgpass
-PGSERVICEFILE           DEFAULT=${XDG_CONFIG_HOME}/pg/pg_service.conf
-
-### python
-#
 PYTHONSTARTUP           DEFAULT=${XDG_CONFIG_HOME}/python/startup.py
-
-### pylint
-#
-PYLINTHOME		DEFAULT=${XDG_CACHE_HOME}/pylint
-
-# pyenv
+PYLINTHOME		        DEFAULT=${XDG_CACHE_HOME}/pylint
 PYENV_ROOT              DEFAULT=${XDG_DATA_HOME}/pyenv
-# PYENV_SHELL             DEFAULT=zsh
-# PYENV_VIRTUALENV_INIT   DEFAULT=1
-# not sure if this needs to be set
-# WORKON_HOME             DEFAULT=${PYENV_ROOT}/versions
-# PROJECT_HOME            DEFAULT=@{HOME}/Dvl
-
-### R
-#
-R_ENVIRON_USER          DEFAULT=${XDG_CONFIG_HOME}/r/.Renviron
-
-### Recoll
-#
-RECOLL_CONFDIR          DEFAULT=${XDG_CONFIG_HOME}/recoll
-
-### ruby
-#
+R_ENVIRON_USER          DEFAULT=${XDG_CONFIG_HOME}/r/Renviron
 RBENV_ROOT              DEFAULT=${XDG_DATA_HOME}/rbenv
-# WARNING: Don't set these, they will interfere with rbenv
-# BUNDLE_USER_CACHE       DEFAULT=${XDG_CACHE_HOME}/bundle
-# BUNDLE_USER_CONFIG      DEFAULT=${XDG_CONFIG_HOME}/bundle
-# BUNDLE_USER_PLUGIN      DEFAULT=${XDG_DATA_HOME}/bundle
-# GEM_HOME                DEFAULT=${XDG_DATA_HOME}/gem
-# GEM_SPEC_CACHE          DEFAULT=${XDG_CACHE_HOME}/gem
-
-### texlive
-#
 TEXMFHOME               DEFAULT=${XDG_CONFIG_HOME}/texmf
-
-### urxvt
-#
 RXVT_SOCKET             DEFAULT=${XDG_RUNTIME_DIR}/urxvt/urxvtd-node
-
-### X11
-#
-ICEAUTHORITY            DEFAULT=${XDG_RUNTIME_DIR}/ICEauthority
+ICEAUTHORITY            DEFAULT=${XDG_CACHE_DIR}/ICEauthority
 XAUTHORITY              DEFAULT=${XDG_RUNTIME_DIR}/Xauthority
 XINITRC                 DEFAULT=${XDG_CONFIG_HOME}/X11/xinitrc
-
-### XMonad
-#
 XMONAD_CACHE_DIR        DEFAULT=${XDG_CACHE_HOME}/xmonad
 XMONAD_CONFIG_DIR       DEFAULT=${XDG_CONFIG_HOME}/xmonad
 XMONAD_DATA_DIR         DEFAULT=${XDG_DATA_HOME}/xmonad
-
-### (z)sh
-#
 HISTFILE                DEFAULT=${XDG_DATA_HOME}/zsh/history.log
 HISTSIZE                DEFAULT=1000000
 SAVEHIST                DEFAULT=1000000
@@ -172,15 +47,6 @@ ZDOTDIR                 DEFAULT=${XDG_CONFIG_HOME}/zsh
 #--------------------#
 # Path
 #--------------------#
-
-# NOTE: PATH here is set before any startup files are read (including
-# /etc/profile). Therefore any programs that start before the shell
-# (eg systemd --user services) will only see whatever is specified
-# here.
-
-# NOTE: all my personal scripts go in ~/.bin, everything else that is
-# "locally installed" (eg stuff from pip or stack install) goes in
-# ~/.local/bin
 
 PATH OVERRIDE=${RBENV_ROOT}/shims:${PYENV_ROOT}/shims:@{HOME}/.bin:@{HOME}/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/bin
 
