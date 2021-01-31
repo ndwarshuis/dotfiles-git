@@ -2,15 +2,9 @@
 	name = ndwarshuis
 	email = ndwar@yavin4.ch
 [core]
-	editor = vi 
+	editor = vim
 [merge]
-	tool = meld
-[diff "exif"]
-	textconv = exiftool
-[diff "word"]
-	textconv = catdoc
-[diff "odt"]
-    textconv = odt2txt
+	tool = vimdiff
 [color]
 	ui = true
 [credential]
