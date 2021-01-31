@@ -3,8 +3,7 @@ Description=Conky Pacman Stats Update Service
 
 [Service]
 Type=oneshot
-## TODO this path can be more robust
-ExecStart=%h/.local/share/conky/scripts/pacman_stats
+ExecStart=%h/.config/conky/scripts/pacman_stats
 
 [Install]
 WantedBy=default.target
