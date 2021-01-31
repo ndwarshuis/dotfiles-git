@@ -48,10 +48,10 @@ bindkey '\e[A' up-line-or-beginning-search
 bindkey '\eOB' down-line-or-beginning-search
 bindkey '\e[B' down-line-or-beginning-search
 
+
 ## --------------------------------------------------
 # enable x11 clipboard sync
 ## --------------------------------------------------
-# https://unix.stackexchange.com/questions/25765/pasting-from-clipboard-to-vi-enabled-zsh-or-bash-shell
 function x11-clip-wrap-widgets() {
     # NB: Assume we are the first wrapper and that we only wrap native widgets
     # See zsh-autosuggestions.zsh for a more generic and more robust wrapper
@@ -59,7 +59,6 @@ function x11-clip-wrap-widgets() {
     shift
 
     for widget in $@; do
-        # Ugh, zsh doesn't have closures
         if [[ $copy_or_paste == "copy" ]]; then
             eval "
             function _x11-clip-wrapped-$widget() {
@@ -88,13 +87,7 @@ local paste_widgets=(
 )
 x11-clip-wrap-widgets copy $copy_widgets
 x11-clip-wrap-widgets paste  $paste_widgets
-
-## --------------------------------------------------
-## Global Functions
-## --------------------------------------------------
-exists() {
-	test -x "$(command -v "$1")"
-}
+ 
 
 ## --------------------------------------------------
 ## PROMPT 
@@ -108,18 +101,15 @@ else
    	user_color="%F{cyan}"
 fi
 
-SSH_FLAG=0
-
-hostname=""
-if [[ $SSH_FLAG -eq 1 ]]; then
-	hostname="@%M"
+HOSTNAME=""
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+	HOSTNAME="@%M"
 fi	
 
 PROMPT=""
 RPROMPT=""
 
 git_info() {
-
     # Exit if not inside a Git repository
     ! git rev-parse --is-inside-work-tree > /dev/null 2>&1 && return
 
@@ -178,7 +168,10 @@ function zle-line-init zle-keymap-select {
     NORMAL="%F{yellow}N%f"
     INSERT="%F{cyan}I%f"
     VIMODE="─%B(${${KEYMAP/vicmd/$NORMAL}/(main|viins)/$INSERT})%b"
-    PROMPT=$'\n%B┌($user_color%n$hostname%f)─(%F{green}%*%f)$VIMODE$GIT\n└─(%F{green}%1~%f)─>%b '
+    USER="$user_color%n$HOSTNAME%f"
+    TIME="%F{green}%*%f"
+    WD="%F{green}%1~%f"
+    PROMPT=$'\n%B┌($USER)─($TIME)$VIMODE$GIT\n└─($WD)─>%b '
     zle reset-prompt
 }
 
@@ -197,50 +190,17 @@ precmd () { echo -ne "\033]0;urxvt: ${PWD}\007" }
 ## Aliases 
 ## --------------------------------------------------
 
-# searching aliases
 alias als='alias | grep'
-
-# various...
-alias grep='grep --color=auto'
-exists colordiff && alias diff=colordiff
-alias sudo='sudo '
 alias hs='history 1 | grep'
-exists mfsconsole && alias msfconsole="msfconsole --quiet -x \"db_connect ${USER}@msf\""
+alias ls='ls --color'
 
-# libreoffice
-exists libreoffice && alias localc='libreoffice --calc'
-exists libreoffice && alias lowriter='libreoffice --writer'
-exists libreoffice && alias loimpress='libreoffice --impress'
+alias grep='grep --color=auto'
+alias sudo='sudo '
+alias diff=colordiff
+alias ll='exa -alhg --group-directories-first'
+alias llt='exa -T'
+alias llg='ll --git'
 
-# xdg conformity
-exists arm && alias arm='arm -c "$XDG_CONFIG_HOME"/arm/armrc'
-exists gpg2 && alias gpg2='gpg2 -c "$XDG_CONFIG_HOME"/gnupg'
-exists sqlite3 && alias sqlite3='SQLITE_HISTORY=$XDG_DATA_HOME/sqlite_history \
-sqlite3 -init "$XDG_CONFIG_HOME"/sqlite3/sqliterc'
-
-# fix trailing slashes in rsync
-rsync_slashes() {
-	new_args=();
-	for i in "$@"; do
-		case $i in /) i=/;; */) i=${i%/};; esac
-		new_args+=$i;
-	done
-	exec rsync "${(@)new_args}"
-}
-exists rsync && alias rsync=rsync_slashes
-
-# list directories
-alias ls='ls --color=auto'
-
-if exists exa; then
-    alias ll='exa -alhg --group-directories-first'
-    alias llt='exa -T'
-    alias llg='ll --git'
-else
-    alias ll='ls -Alh'
-fi
-
-# nav
 setopt autopushd
 
 alias d='dirs -v | head -10'
@@ -260,14 +220,26 @@ alias uuu='cd ../../..'
 alias uuuu='cd ../../../..'
 alias uuuuu='cd ../../../../..'
 
-# power on/off
 alias reboot='sudo /sbin/reboot'
 alias poweroff='sudo /sbin/poweroff'
 alias halt='sudo /sbin/halt'
 alias shutdown='sudo /sbin/shutdown'
 
-# git
-# https://github.com/Bash-it/bash-it/blob/master/aliases/available/git.aliases.bash
+alias sc="sudo systemctl"
+alias sce="sudo systemctl enable"
+alias scd="sudo systemctl disable"
+alias scs="sudo systemctl start"
+alias sct="sudo systemctl stop"
+alias scr="sudo systemctl restart"
+alias sca="systemctl status"
+
+alias scu="systemctl --user"
+alias scue="systemctl --user enable"
+alias scud="systemctl --user disable"
+alias scus="systemctl --user start"
+alias scut="systemctl --user stop"
+alias scur="systemctl --user restart"
+
 alias g='git'
 alias gcl='git clone'
 alias ga='git add'
@@ -296,34 +268,6 @@ alias gt="git tag"
 alias gnew="git log HEAD@{1}..HEAD@{0}"
 alias ggui="git gui"
 
-# systemd
-alias sc="sudo systemctl"
-alias sce="sudo systemctl enable"
-alias scd="sudo systemctl disable"
-alias scs="sudo systemctl start"
-alias sct="sudo systemctl stop"
-alias scr="sudo systemctl restart"
-alias sca="systemctl status"
-
-alias scu="systemctl --user"
-alias scue="systemctl --user enable"
-alias scud="systemctl --user disable"
-alias scus="systemctl --user start"
-alias scut="systemctl --user stop"
-alias scur="systemctl --user restart"
-
-# optimus manager
-alias opti="optimus-manager --switch intel"
-alias optn="optimus-manager --switch nvidia"
-
-# suffix
-alias -s {htm,html,pdf}='firefox'
-alias -s {tiff,jpg,jpeg,png}='geeqie'
-alias -s {mkv,wav,mp4,mov,ogg,m4a,flac,mp3}='vlc'
-alias -s svg='inkscape'
-alias -s log='less'
-alias -s {csv,doc,docx,odp,ods,odt,ppt,pptx,xls,xlsx}='libreoffice'
-
 ## --------------------------------------------------
 ## Manly Colors
 ## --------------------------------------------------
@@ -340,18 +284,9 @@ man() {
 }
 
 ## --------------------------------------------------
-## Other Imports
-## --------------------------------------------------
-# virtualenvwrapper_file=/usr/bin/virtualenvwrapper.sh
-# if [ -f "$virtualenvwrapper_file" ]; then
-#     source "$virtualenvwrapper_file"
-# fi
-
-## --------------------------------------------------
 ## Python
 ## --------------------------------------------------
 if command -v pyenv 1>/dev/null 2>&1; then
-    # take out PATH since this should alredy be set in pam_environ
     eval "$(pyenv init - | sed '/PATH/d' -)"
     eval "$(pyenv virtualenv-init - | sed '/PATH/d' -)"
 fi
