@@ -1,9 +1,3 @@
-[submodule ".emacs.d"]
-	path = .emacs.d
-	url = git@github.com:ndwarshuis/.emacs.d.git
-[submodule ".local/share/conky"]
-	path = .local/share/conky
-	url = git@github.com:ndwarshuis/conky-main.git
 [submodule ".config/xmonad"]
 	path = .config/xmonad
 	url = ssh://github/ndwarshuis/xmonad-config.git
@@ -13,3 +7,9 @@
 [submodule ".config/rofi-extras"]
 	path = .config/rofi-extras
 	url = ssh://github/ndwarshuis/rofi-extras.git
+[submodule ".config/emacs"]
+	path = .config/emacs
+	url = git@github.com:ndwarshuis/.emacs.d.git
+[submodule ".config/conky"]
+	path = .config/conky
+	url = git@github.com:ndwarshuis/conky-main.git

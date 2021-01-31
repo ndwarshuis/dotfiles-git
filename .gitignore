@@ -33,6 +33,7 @@
 !/.config/picom.conf
 !/.config/conky
 !/.config/dunstrc
+!/.config/emacs
 !/.config/fontconfig
 !/.config/git
 !/.config/gtk-2.0
