@@ -1,0 +1,14 @@
+#! /bin/bash
+
+# get an oauth access token using the refresh token
+
+token_url="$(secret-tool lookup user $1 type token_url)"
+client_id="$(secret-tool lookup user $1 type client_id)"
+client_secret="$(secret-tool lookup user $1 type client_secret)"
+refresh_token="$(secret-tool lookup user $1 type refresh_token)"
+
+curl --silent \
+     --request POST \
+     --data "client_id=$client_id&client_secret=$client_secret&refresh_token=$refresh_token&grant_type=refresh_token" \
+     "$token_url" \
+    | jq -r '.access_token'
