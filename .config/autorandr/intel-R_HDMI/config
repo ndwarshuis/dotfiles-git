@@ -1,0 +1,11 @@
+output eDP-1
+pos 0x0
+mode 1920x1080
+panning 0x0
+primary
+
+output HDMI-1
+mode 1920x1080
+right-of eDP-1
+panning 1920x1080+1920+0
+

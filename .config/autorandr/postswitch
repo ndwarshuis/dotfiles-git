@@ -1,0 +1,6 @@
+#! /bin/bash
+
+feh --no-fehbg --bg-scale --bg-fill "$XDG_DATA_HOME/backgrounds/wallpaper.png" &
+
+killall conky > /dev/null 2>&1
+conky -d > /dev/null 2>&1
