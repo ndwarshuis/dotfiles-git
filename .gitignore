@@ -14,12 +14,11 @@
 /Dvl
 /Org
 
-# ignore all in ssh except config
-/.ssh/*
-!/.ssh/config
-
 # don't need cache-like things
 /.cache/*
+
+# don't track ssh (this goes in a super secure vault)
+/.ssh
 
 # need to manually add pg history
 !/.cache/pg/
