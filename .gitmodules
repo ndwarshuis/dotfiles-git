@@ -9,7 +9,7 @@
 	url = ssh://github/ndwarshuis/rofi-extras.git
 [submodule ".config/emacs"]
 	path = .config/emacs
-	url = git@github.com:ndwarshuis/.emacs.d.git
+	url = ssh://github/ndwarshuis/.emacs.d.git
 [submodule ".config/conky"]
 	path = .config/conky
-	url = git@github.com:ndwarshuis/conky-main.git
+	url = ssh://github/ndwarshuis/conky-main.git
