@@ -64,6 +64,9 @@
 !/.config/X11
 !/.config/xmonad
 !/.config/xman
+!/.config/VirtualBox
+/.config/VirtualBox/*
+!/.config/VirtualBox/VirtualBox.xml
 !/.config/zsh
 /.config/zsh/.zcompdump*
 
