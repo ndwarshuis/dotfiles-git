@@ -51,6 +51,7 @@
 /.config/psd/*
 !/.config/psd/psd.conf
 !/.config/python
+!/.config/qt5ct
 !/.config/r/
 /.config/r/session.Rhistory
 !/.config/recoll
@@ -60,7 +61,7 @@
 !/.config/rofi
 !/.config/rofi-extras
 !/.config/systemd
-# TODO add texmf here
+!/.config/texmf
 !/.config/X11
 !/.config/xmonad
 !/.config/xman
