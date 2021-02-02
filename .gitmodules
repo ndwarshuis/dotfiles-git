@@ -1,15 +1,15 @@
 [submodule ".config/xmonad"]
 	path = .config/xmonad
-	url = ssh://github/ndwarshuis/xmonad-config.git
+	url = ../xmonad-config.git
 [submodule ".config/xman"]
 	path = .config/xman
-	url = ssh://github/ndwarshuis/xman.git
+	url = ../xman.git
 [submodule ".config/rofi-extras"]
 	path = .config/rofi-extras
-	url = ssh://github/ndwarshuis/rofi-extras.git
+	url = ../rofi-extras.git
 [submodule ".config/emacs"]
 	path = .config/emacs
-	url = ssh://github/ndwarshuis/.emacs.d.git
+	url = ../.emacs.d.git
 [submodule ".config/conky"]
 	path = .config/conky
-	url = ssh://github/ndwarshuis/conky-main.git
+	url = ../conky-main.git
