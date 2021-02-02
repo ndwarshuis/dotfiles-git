@@ -27,6 +27,7 @@
 
 # ignore all but a few config folders/files
 /.config/*
+!/.config/autorandr
 !/.config/aws
 !/.config/ccache.config
 !/.config/picom.conf
