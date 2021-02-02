@@ -5,5 +5,5 @@ After=network.target network-online.target dbus.socket
 [Service]
 Type=oneshot
 # use override here for xdg awareness
-ExecStart=%h/.bin/mbsync -Va
+ExecStart=%h/.bin/mbsync -a
 ExecStartPost=%h/.bin/mu-index-emacs-maybe
