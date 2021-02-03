@@ -1,0 +1,32 @@
+#! /bin/bash
+
+create_entry() {
+	local -n params=$1
+	efibootmgr -q -b $bootNumber -B
+	efibootmgr -q -b $bootNumber -d "${params[device]}" -p "${params[part]}" -c -L "${params[label]}" -l "${params[loader]}" -u "${params[args]}"
+	if [ $bootNumber -ne 0 ]; then bootOrder+=",$bootNumber"; else bootOrder+="0"; fi
+	((bootNumber+=1))
+}
+
+# must disable KMS for nvidia else X does not start :/
+
+root="root=/dev/mapper/vg1-root rw rootfstype=btrfs rootflags=noatime,compress-force,ssd,space_cache,subvolid=5,subvol=/"
+#root="root=/dev/mapper/vg1-root rw rootfstype=ext4 rootflags=noatime,data=ordered,commit=45"
+opts="resume=/dev/nvme0n1p2 libahci.ignore_sss=1 nmi_watchdog=0 vt.global_cursor_default=0 acpi_osi=\"Windows 2019\" quiet loglevel=3 rd.systemd.show_status=0 rd.udev.log-priority=3 initrd=/intel-ucode.img"
+
+declare -A arch_lts=( ["device"]="/dev/nvme0n1" ["part"]=1 ["label"]="Arch Linux (LTS)" ["loader"]="/vmlinuz-linux-lts" ["args"]="$root $opts elevator=deadline initrd=/initramfs-linux-lts.img")
+declare -A arch_lts_native=( ["device"]="/dev/nvme0n1" ["part"]=1 ["label"]="Arch Linux (LTS-native)" ["loader"]="/vmlinuz-linux-lts-native" ["args"]="$root $opts pcie_aspm=force elevator=deadline initrd=/initramfs-linux-lts-native.img")
+#~ declare -A win10=( ["device"]="/dev/nvme0n1" ["part"]=2 ["label"]="Windows 10" ["loader"]="\EFI\MICROSOFT\BOOT\BOOTMGFW.EFI" ["args"]="")
+
+declare -a entries
+
+bootOrder=""
+bootNumber=0
+
+# order of these commands determines boot order
+create_entry arch_lts_native
+create_entry arch_lts
+
+efibootmgr -q -D
+efibootmgr -q -O
+efibootmgr -o $bootOrder
