@@ -11,8 +11,7 @@ create_entry() {
 # must disable KMS for nvidia else X does not start :/
 
 root="root=/dev/mapper/vg1-root rw rootfstype=btrfs rootflags=noatime,compress-force,ssd,space_cache,subvolid=5,subvol=/"
-#root="root=/dev/mapper/vg1-root rw rootfstype=ext4 rootflags=noatime,data=ordered,commit=45"
-opts="resume=/dev/nvme0n1p2 libahci.ignore_sss=1 nmi_watchdog=0 vt.global_cursor_default=0 acpi_osi=\"Windows 2019\" quiet loglevel=3 rd.systemd.show_status=0 rd.udev.log-priority=3 initrd=/intel-ucode.img"
+opts="resume=/dev/nvme0n1p2 systemd.unified_cgroup_hierarchy=1 libahci.ignore_sss=1 nmi_watchdog=0 vt.global_cursor_default=0 acpi_osi=\"Windows 2019\" quiet loglevel=3 rd.systemd.show_status=0 rd.udev.log-priority=3 initrd=/intel-ucode.img"
 
 declare -A arch_lts=( ["device"]="/dev/nvme0n1" ["part"]=1 ["label"]="Arch Linux (LTS)" ["loader"]="/vmlinuz-linux-lts" ["args"]="$root $opts elevator=deadline initrd=/initramfs-linux-lts.img")
 declare -A arch_lts_native=( ["device"]="/dev/nvme0n1" ["part"]=1 ["label"]="Arch Linux (LTS-native)" ["loader"]="/vmlinuz-linux-lts-native" ["args"]="$root $opts pcie_aspm=force elevator=deadline initrd=/initramfs-linux-lts-native.img")
