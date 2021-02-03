@@ -12,6 +12,7 @@ ASPELL_CONF             DEFAULT="per-conf ${XDG_CONFIG_HOME}/aspell/aspell.conf;
 CCACHE_CONFIGPATH       DEFAULT=${XDG_CONFIG_HOME}/ccache.config
 CCACHE_DIR              DEFAULT=${XDG_CACHE_HOME}/ccache
 CCNET_CONF_DIR          DEFAULT=${XDG_CONFIG_HOME}/ccnet
+DOCKER_HOST             DEFAULT=unix://${XDG_RUNTIME_DIR}/docker.sock
 GNUPGHOME               DEFAULT=${XDG_CONFIG_HOME}/gnupg
 GRIPHOME                DEFAULT=${XDG_CONFIG_HOME}/grip
 GTK2_RC_FILES           DEFAULT=${XDG_CONFIG_HOME}/gtk-2.0/gtkrc
