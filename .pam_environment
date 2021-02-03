@@ -12,6 +12,10 @@ ASPELL_CONF             DEFAULT="per-conf ${XDG_CONFIG_HOME}/aspell/aspell.conf;
 CCACHE_CONFIGPATH       DEFAULT=${XDG_CONFIG_HOME}/ccache.config
 CCACHE_DIR              DEFAULT=${XDG_CACHE_HOME}/ccache
 CCNET_CONF_DIR          DEFAULT=${XDG_CONFIG_HOME}/ccnet
+
+# NOTE: in order for rootless docker to work on BTRFS, need the
+# user_subvol_rm_allowed mount option on the host filesystem
+
 DOCKER_HOST             DEFAULT=unix://${XDG_RUNTIME_DIR}/docker.sock
 GNUPGHOME               DEFAULT=${XDG_CONFIG_HOME}/gnupg
 GRIPHOME                DEFAULT=${XDG_CONFIG_HOME}/grip
@@ -26,6 +30,7 @@ MU_HOME                 DEFAULT=${XDG_CACHE_HOME}/mu
 MAILDIR                 DEFAULT=/mnt/data/Mail
 NODE_REPL_HISTORY       DEFAULT=${XDG_DATA_HOME}/npm/node_repl.log
 INPUTRC                 DEFAULT=${XDG_CONFIG_HOME}/readline/inputrc
+PASSWORD_STORE_DIR      DEFAULT=${XDG_DATA_HOME}/pass
 PKGDEST                 DEFAULT=/var/cache/pacman/pkg
 PYTHONSTARTUP           DEFAULT=${XDG_CONFIG_HOME}/python/startup.py
 PYLINTHOME		        DEFAULT=${XDG_CACHE_HOME}/pylint
