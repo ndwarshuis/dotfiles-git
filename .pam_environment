@@ -17,7 +17,6 @@ CCNET_CONF_DIR          DEFAULT=${XDG_CONFIG_HOME}/ccnet
 # user_subvol_rm_allowed mount option on the host filesystem
 
 DOCKER_HOST             DEFAULT=unix://${XDG_RUNTIME_DIR}/docker.sock
-GNUPGHOME               DEFAULT=${XDG_CONFIG_HOME}/gnupg
 GRIPHOME                DEFAULT=${XDG_CONFIG_HOME}/grip
 GTK2_RC_FILES           DEFAULT=${XDG_CONFIG_HOME}/gtk-2.0/gtkrc
 STACK_ROOT              DEFAULT=${XDG_DATA_HOME}/stack
@@ -30,7 +29,6 @@ MU_HOME                 DEFAULT=${XDG_CACHE_HOME}/mu
 MAILDIR                 DEFAULT=/mnt/data/Mail
 NODE_REPL_HISTORY       DEFAULT=${XDG_DATA_HOME}/npm/node_repl.log
 INPUTRC                 DEFAULT=${XDG_CONFIG_HOME}/readline/inputrc
-PASSWORD_STORE_DIR      DEFAULT=${XDG_DATA_HOME}/pass
 PKGDEST                 DEFAULT=/var/cache/pacman/pkg
 PYTHONSTARTUP           DEFAULT=${XDG_CONFIG_HOME}/python/startup.py
 PYLINTHOME		        DEFAULT=${XDG_CACHE_HOME}/pylint
@@ -49,6 +47,10 @@ HISTFILE                DEFAULT=${XDG_DATA_HOME}/zsh_history.log
 HISTSIZE                DEFAULT=1000000
 SAVEHIST                DEFAULT=1000000
 ZDOTDIR                 DEFAULT=${XDG_CONFIG_HOME}/zsh
+
+# store passwords in gnupg directory (and then encrypt the entire thing with veracrypt)
+GNUPGHOME               DEFAULT=${XDG_CONFIG_HOME}/gnupg
+PASSWORD_STORE_DIR      DEFAULT=${GNUPGHOME}/pass
 
 #--------------------#
 # Path

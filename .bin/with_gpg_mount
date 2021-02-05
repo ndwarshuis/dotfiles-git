@@ -1,0 +1,55 @@
+#! /bin/bash
+
+## with_gpg_mount: call a program after mounting GNUPGHOME
+
+bw_gpg_name="Veracrypt (gpg)"
+vault_path=/mnt/data/Documents/crypt/gnupg
+
+bin="$1"
+shift
+
+## TODO most of this stuff could be more easily done in the rofi-extras
+## haskell code where many of the edge cases that this is hoping to avoid are
+## already strictly/brutally snuffed out by GHC's iron fist
+
+notify_error () {
+    notify-send --icon=dialog-error-symbolic "$1"
+}
+
+notify_info () {
+    notify-send --icon=dialog-information-symbolic "$1"
+}
+
+mount_maybe () {
+    session=$(dbus-send --print-reply=literal --session \
+                        --dest=org.rofi.bitwarden \
+                        /bitwarden org.rofi.bitwarden.session.GetSession | \
+                  sed -e 's/^ *//g')
+
+    if [[ "$session" == "" ]]; then
+        notify_error "Could not unlock bitwarden vault"
+        exit 1
+    else
+        pwd=$(/usr/bin/bw get password "$bw_gpg_name" --session "$session" \
+                          2> /dev/null)
+    fi
+
+    if [[ "$pwd" == "" ]]; then
+        notify_error "Could not get bitwarden password"
+        exit 1
+    else
+        /usr/bin/veracrypt -p "$pwd" "$vault_path" "$GNUPGHOME"
+        notify_info "Mounted $GNUPGHOME"
+    fi
+}
+
+if ! grep "$GNUPGHOME" /proc/mounts > /dev/null 2>&1; then
+    if mount_maybe; then
+        "$bin" "$@"
+    else
+        notify_error "Could not mount gnupg directory"
+        exit 1
+    fi
+else
+    "$bin" "$@"
+fi

@@ -1,0 +1,5 @@
+#! /bin/bash
+
+## pass (override): mount $GNUPGHOME before executing
+
+with_gpg_mount /usr/bin/pass "$@"
