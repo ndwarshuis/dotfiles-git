@@ -37,7 +37,7 @@ if [ -f ".rundocker" ]; then
 
     # add X11 socket/env so we can see pretty plots
     # from here https://github.com/rocker-org/rocker-versioned/tree/master/X11
-    xsock=/tmp/.X11-unix
+    xsock=/tmp/.X11-unix/X0
     xauth=/tmp/.docker.xauth
     touch "$xauth"
     xauth nlist "$DISPLAY" | sed -e 's/^..../ffff/' | \
@@ -47,7 +47,8 @@ if [ -f ".rundocker" ]; then
          -e "XAUTHORITY=${xauth}"
          -e "DISPLAY=$DISPLAY")
 
-    opts=(-ti --rm -w "$work_dir" --mount "$pwd_mnt" --user "$user"
+    # for some reason this won't work if you aren't root
+    opts=(-ti --rm -w "$work_dir" --mount "$pwd_mnt" -u 0 #--user "$user"
           "${x11[@]}")
 
     # TODO not all images have the same path for R
