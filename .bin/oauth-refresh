@@ -1,11 +1,10 @@
 #! /bin/bash
 
 # get an oauth access token using the refresh token
-
-token_url="$(secret-tool lookup user $1 type token_url)"
-client_id="$(secret-tool lookup user $1 type client_id)"
-client_secret="$(secret-tool lookup user $1 type client_secret)"
-refresh_token="$(secret-tool lookup user $1 type refresh_token)"
+token_url="$(pass "email/$1/token_url")"
+client_id="$(pass "email/$1/client_id")"
+client_secret="$(pass "email/$1/client_secret")"
+refresh_token="$(pass "email/$1/refresh_token")"
 
 curl --silent \
      --request POST \
