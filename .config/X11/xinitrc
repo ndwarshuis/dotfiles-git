@@ -2,6 +2,9 @@
 
 userresources="$XDG_CONFIG_HOME/X11/xresources"
 
+systemctl --user import-environment PATH
+systemctl --user import-environment DISPLAY
+
 if [ -f "$userresources" ]; then
     xrdb -merge "$userresources"
 fi
