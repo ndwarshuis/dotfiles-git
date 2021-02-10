@@ -36,6 +36,8 @@
 !/.config/emacs
 !/.config/fontconfig
 !/.config/git
+/.config/git/*
+!/.config/git/config
 !/.config/gtk-2.0
 /.config/gtk-2.0/gtkfilechooser.ini
 !/.config/gtk-3.0
@@ -82,8 +84,17 @@
 
 ### non-xdg things (all hardcoded by source)
 
+# ansible (for now)
+.ansible
+
 # firefox
 .mozilla
+
+# matlab
+.matlab
+
+# pulse audio
+.pulse-cookie
 
 # steam
 /.steam*
