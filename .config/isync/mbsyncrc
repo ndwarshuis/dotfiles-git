@@ -69,7 +69,7 @@
 IMAPAccount gmail
 Host imap.gmail.com
 User natedwarshuis@gmail.com
-PassCmd "/home/ndwar/.bin/oauth-refresh natedwarshuis@gmail.com"
+PassCmd "oauth-refresh natedwarshuis@gmail.com"
 AuthMechs XOAUTH2
 SSLType IMAPS
 CertificateFile /etc/ssl/certs/ca-certificates.crt
@@ -114,8 +114,7 @@ Channel gmail-all
 IMAPAccount gatech
 Host outlook.office365.com
 User ndwarshuis3@gatech.edu
-#PassCmd "secret-tool lookup host outlook.office365.com user ndwarshuis3@gatech.edu"
-PassCmd "/home/ndwar/.bin/oauth-refresh ndwarshuis3@gatech.edu"
+PassCmd "oauth-refresh ndwarshuis3@gatech.edu"
 AuthMechs XOAUTH2
 SSLType IMAPS
 CertificateFile /etc/ssl/certs/ca-certificates.crt
@@ -163,7 +162,7 @@ Channel gatech-archive
 IMAPAccount emory
 Host outlook.office365.com
 User ndwarsh@emory.edu
-PassCmd "secret-tool lookup host outlook.office365.com user ndwarsh@emory.edu"
+PassCmd "pass email/ndwarsh@emory.edu/plain"
 AuthMechs PLAIN
 SSLType IMAPS
 CertificateFile /etc/ssl/certs/ca-certificates.crt
@@ -210,7 +209,7 @@ Channel emory-archive
 IMAPAccount yavin4
 Host portnoy4prez.yavin4.ch
 User ndwar@yavin4.ch
-PassCmd "secret-tool lookup host peart4prez.yavin4.ch user ndwar@yavin4.ch"
+PassCmd "pass email/ndwar@yavin4.ch/plain"
 AuthMechs PLAIN
 SSLType IMAPS
 CertificateFile /etc/ssl/certs/ca-certificates.crt
