@@ -38,8 +38,13 @@ mount_maybe () {
         notify_error "Could not get bitwarden password"
         exit 1
     else
-        /usr/bin/veracrypt -p "$pwd" "$vault_path" "$GNUPGHOME"
-        notify_info "Mounted $GNUPGHOME"
+        ## NOTE this needs the DISPLAY env var to prompt for the sudo password
+        if /usr/bin/veracrypt -p "$pwd" "$vault_path" "$GNUPGHOME"; then
+            notify_info "Mounted $GNUPGHOME"
+        else
+            notify_error "Failed to mount $GNUPGHOME"
+            exit 1
+        fi
     fi
 }
 
