@@ -65,3 +65,7 @@ GDK_USE_XFT             DEFAULT=1
 QT_XFT                  DEFAULT=true
 SAL_USE_VCLPLUGIN       DEFAULT=gtk
 QT_QPA_PLATFORMTHEME    DEFAULT=qt5ct
+
+# this is needed to make MATLAB work with 
+# xmonad and other godly window managers
+_JAVA_AWT_WM_NONREPARENTING DEFAULT=1
