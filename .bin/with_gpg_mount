@@ -21,18 +21,11 @@ notify_info () {
 }
 
 mount_maybe () {
-    session=$(dbus-send --print-reply=literal --session \
-                        --dest=org.rofi.bitwarden \
-                        /bitwarden org.rofi.bitwarden.session.GetSession | \
-                  sed -e 's/^ *//g')
-
-    if [[ "$session" == "" ]]; then
-        notify_error "Could not unlock bitwarden vault"
-        exit 1
-    else
-        pwd=$(/usr/bin/bw get password "$bw_gpg_name" --session "$session" \
-                          2> /dev/null)
-    fi
+    pwd=$(dbus-send --print-reply=literal --session \
+                    --dest=org.rofi.bitwarden \
+                    /bitwarden org.rofi.bitwarden.session.GetPassword \
+                    string:"$bw_gpg_name" | \
+              sed -e 's/^ *//g')
 
     if [[ "$pwd" == "" ]]; then
         notify_error "Could not get bitwarden password"
