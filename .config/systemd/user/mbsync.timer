@@ -2,7 +2,6 @@
 Description=Mailbox synchronization timer
 
 [Timer]
-OnBootSec=2m
 OnUnitActiveSec=5m
 
 [Install]

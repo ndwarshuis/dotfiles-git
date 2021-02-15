@@ -1,6 +1,8 @@
 [Unit]
 Description=Mailbox synchronization service
-After=network.target network-online.target dbus.socket
+After=network.target network-online.target dbus.socket mount-veracrypt@gnupg.service
+# we need gpg keys which are stored in a Veracrypt volume
+Requires=mount-veracrypt@gnupg.service
 
 [Service]
 Type=oneshot
