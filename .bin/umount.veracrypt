@@ -1,0 +1,15 @@
+#! /bin/bash
+
+## unmount a veracrypt volume
+
+
+## the funny evals are here to expand any literal env variables that may be
+## passed because systemd didn't expand them (yuck)
+mountpoint="$(eval echo "$1")"
+
+if /usr/bin/sudo /usr/bin/veracrypt -d "$mountpoint"; then
+    echo "Unmounted $1"
+else
+    echo "Failed to unmount $1"
+    exit 1
+fi

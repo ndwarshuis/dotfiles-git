@@ -1,0 +1,30 @@
+#! /bin/bash
+
+## mount a veracrypt volume
+
+## NOTE this will need the DISPLAY variable in order to prompt for the bitwarden
+## password
+pwd=$(dbus-send --print-reply=literal --session \
+                --dest=org.rofi.bitwarden \
+                /bitwarden org.rofi.bitwarden.session.GetPassword \
+                string:"$1" | \
+          sed -e 's/^ *//g')
+
+## the funny evals are here to expand any literal env variables that may be
+## passed because systemd didn't expand them (yuck)
+volume="$(eval echo "$2")"
+mountpoint="$(eval echo "$3")"
+
+if [[ "$pwd" == "" ]]; then
+    echo "Could not get bitwarden password"
+    exit 1
+else
+    if /usr/bin/sudo /usr/bin/veracrypt \
+                     --text --non-interactive --stdin \
+                     "$volume" "$mountpoint" <<< "$pwd"; then
+        echo "Mounted $1"
+    else
+        echo "Failed to mount $1"
+        exit 1
+    fi
+fi
